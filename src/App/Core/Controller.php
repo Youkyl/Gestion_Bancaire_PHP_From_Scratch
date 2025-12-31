@@ -4,7 +4,7 @@ namespace App\Core;
 
 class Controller
 {
-    protected function renderHtml(string $path)
+    protected function renderHtml(string $path, array $data = [])
     {
         if (!file_exists($path)) {
             http_response_code(404);

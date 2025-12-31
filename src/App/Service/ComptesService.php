@@ -20,6 +20,8 @@ class ComptesService
 
 
     public function creatAcc($compte) : void{
+        
+        $compte->setNumero($this->generateNumAcc());
         $this->comptesRepo->insertCompte($compte);
     }
 

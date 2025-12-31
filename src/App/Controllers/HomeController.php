@@ -2,10 +2,12 @@
 
 namespace App\Controllers;
 
-class HomeController
+use App\Core\Controller;
+
+class HomeController extends Controller
 {
     public function index()
     {
-        require_once __DIR__ . '/../../Public/index.html';
+        $this->renderHtml(__DIR__ . '/../../App/View/index.html');
     }
 }

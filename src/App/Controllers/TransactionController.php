@@ -2,19 +2,20 @@
 
 namespace App\Controllers;
 
+use App\Core\Controller;
 use App\Entity\Transaction;
 
-class TransactionController
+class TransactionController extends Controller
 {
     public function index()
     {
         $transactions = [];
-        require_once __DIR__ . '/../../Public/Pages/ListTransac.html';
+        $this->renderHtml(__DIR__ . '/../../App/View/Pages/ListTransac.html', ['transactions' => $transactions]);
     }
 
     public function create()
     {
-        require_once __DIR__ . '/../../Public/Pages/AddTransac.html';
+        $this->renderHtml(__DIR__ . '/../../App/View/Pages/AddTransac.html');
     }
 
 }
