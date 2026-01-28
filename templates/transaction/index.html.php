@@ -10,304 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-        body{background:#f9fafb;color:#101828}
-        .app{display:flex;min-height:100vh}
-        a{
-            text-decoration: none;
-        }
-
-/* ================= SIDEBAR ================= */
-.sidebar {
-    width: 260px;
-    background: #101828;
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.sidebar-header {
-    padding: 24px;
-    border-bottom: 1px solid #1e2939;
-}
-
-.sidebar-header h2 {
-    font-size: 18px;
-}
-
-.sidebar-header p {
-    font-size: 12px;
-    color: #98a2b3;
-    margin-top: 4px;
-}
-
-.menu {
-    padding: 16px;
-}
-
-.menu a {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    height: 48px;
-    padding: 0 16px;
-    margin-bottom: 8px;
-    border-radius: 10px;
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 14px;
-    transition: background 0.2s ease;
-}
-
-/* ==== ICÔNES SIDEBAR ==== */
-.menu a i {
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    color: #c7d2fe;
-}
-
-.menu a.active {
-    background: #155dfc;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
-}
-
-.menu a.active i {
-    color: #ffffff;
-}
-
-.menu a:hover {
-    background: #1e2939;
-}
-
-.logout {
-    padding: 16px;
-    border-top: 1px solid #1e2939;
-}
-
-.logout a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 12px;
-    border-radius: 10px;
-    color: #ffffff;
-    text-decoration: none;
-}
-
-.logout i {
-    font-size: 16px;
-    color: #fda4af;
-}
-
-.logout a:hover {
-    background: #1e2939;
-}
-
-
-        /* MAIN */
-        .main{flex:1;padding:32px}
-        .page-header h1{font-size:28px}
-        .page-header p{margin-top:6px;color:#475467}
-
-        /* TABS */
-        .tabs{margin-top:24px;display:flex;gap:12px}
-        .tab{padding:10px 18px;border-radius:8px;border:1px solid #d0d5dd;background:#fff}
-        .tab.active{background:#155dfc;color:#fff;border-color:#155dfc}
-
-        /* CARD */
-        .card{margin-top:24px;background:#fff;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px}
-
-        /* FORM */
-        .form-group{margin-bottom:20px}
-        label{display:block;margin-bottom:6px;font-size:14px}
-        select{width:100%;padding:14px;border-radius:8px;border:1px solid #d0d5dd}
-
-        /* INFO */
-        .info{display:flex;justify-content:space-between;align-items:center;background:#f0f7ff;padding:16px;border-radius:10px;margin-bottom:20px}
-        .info strong{font-size:18px}
-
-        /* TABLE */
-        table{width:100%;border-collapse:collapse}
-        th{font-size:12px;color:#667085;padding:12px;text-align:left}
-        td{padding:14px;border-top:1px solid #f0f2f5;font-size:14px}
-        .badge{padding:4px 10px;border-radius:6px;font-size:12px}
-        .green{background:#ecfdf3;color:#027a48}
-        .red{background:#fef2f2;color:#b42318}
-        .amount-plus{color:#16a34a}
-        .amount-minus{color:#dc2626}
-
-        /* EMPTY */
-        .empty{text-align:center;padding:60px;color:#667085}
-        .empty i{font-size:48px;color:#d0d5dd;margin-bottom:12px}
-        /* ========== AUTOCOMPLETE ========== */
-
-.autocomplete-container {
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-}
-
-#compte-search {
-    width: 100%;
-    padding: 12px 16px;
-    font-size: 15px;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
-    transition: all 0.3s;
-    background: white;
-    font-family: 'Courier New', monospace;
-    font-weight: 500;
-}
-
-#compte-search:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-#compte-search::placeholder {
-    color: #9ca3af;
-    font-family: inherit;
-}
-
-.autocomplete-items {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    right: 0;
-    z-index: 99;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    max-height: 350px;
-    overflow-y: auto;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    display: none;
-}
-
-.autocomplete-item {
-    padding: 14px 16px;
-    cursor: pointer;
-    border-bottom: 1px solid #f3f4f6;
-    transition: all 0.2s;
-}
-
-.autocomplete-item:last-child {
-    border-bottom: none;
-}
-
-.autocomplete-item:hover {
-    background: #f9fafb;
-    padding-left: 20px;
-}
-
-.autocomplete-item.no-result {
-    color: #9ca3af;
-    cursor: default;
-    text-align: center;
-    font-style: italic;
-}
-
-.autocomplete-item.no-result:hover {
-    background: white;
-    padding-left: 16px;
-}
-
-.compte-info {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.compte-info strong {
-    color: #111827;
-    font-size: 16px;
-    font-family: 'Courier New', monospace;
-}
-
-.compte-info mark {
-    background: #fef3c7;
-    color: #92400e;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-weight: bold;
-}
-
-.compte-details {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #6b7280;
-    font-size: 13px;
-}
-
-/* Badges */
-.badge {
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.badge-blue {
-    background: #dbeafe;
-    color: #1e40af;
-}
-
-.badge-green {
-    background: #d1fae5;
-    color: #065f46;
-}
-
-.badge-orange {
-    background: #fed7aa;
-    color: #92400e;
-}
-
-/* Scrollbar */
-.autocomplete-items::-webkit-scrollbar {
-    width: 8px;
-}
-
-.autocomplete-items::-webkit-scrollbar-track {
-    background: #f3f4f6;
-    border-radius: 8px;
-}
-
-.autocomplete-items::-webkit-scrollbar-thumb {
-    background: #d1d5db;
-    border-radius: 8px;
-}
-
-.autocomplete-items::-webkit-scrollbar-thumb:hover {
-    background: #9ca3af;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .autocomplete-container {
-        max-width: 100%;
-    }
-    
-    #compte-search {
-        font-size: 14px;
-        padding: 10px 14px;
-    }
-    
-    .autocomplete-item {
-        padding: 12px 14px;
-    }
-}
-    </style>
+    <link rel="stylesheet" href="<?php echo CSS_ROOT; ?>/indexTransac.css">
 </head>
 
 <body>
@@ -323,16 +26,16 @@
             </div>
 
             <nav class="menu">
-                <a href="<?php echo WEB_ROOT; ?>/?controller=home&action=index">
+                <a href="<?php echo WEB_ROOT; ?>/home/index">
                     <i class="fa-solid fa-chart-line"></i> Tableau de bord
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=create">
+                <a href="<?php echo WEB_ROOT; ?>/compte/create">
                     <i class="fa-solid fa-user-plus"></i> Créer un compte
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=index" >
+                <a href="<?php echo WEB_ROOT; ?>/compte/index">
                     <i class="fa-solid fa-users"></i> Afficher les comptes
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=create" class="active">
+                <a href="<?php echo WEB_ROOT; ?>/transaction/create" class="active">
                     <i class="fa-solid fa-arrow-right-arrow-left"></i> Transactions
                 </a>
             </nav>
@@ -354,12 +57,12 @@
         </div>
 
         <div class="tabs">
-            <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=create">
+            <a href="<?php echo WEB_ROOT; ?>/transaction/create">
                 <div class="tab">
                     Ajouter une transaction
                 </div>
             </a>
-            <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=index">
+            <a href="<?php echo WEB_ROOT; ?>/transaction/index">
                 <div class="tab active">
                     Lister les transactions
                 </div>
@@ -378,111 +81,23 @@
 
             <div class="form-group">
                 
-<label>Rechercher un compte</label>
-<div class="autocomplete-container">
-    <input type="text" 
-           id="compte-search" 
-           placeholder="Tapez un numéro de compte..." 
-           value="<?= $numeroDeCompte ?? '' ?>"
-           autocomplete="off">
-    
-    <div id="autocomplete-list" class="autocomplete-items"></div>
-</div>
+                <label>Rechercher un compte</label>
+                <div class="autocomplete-container">
+                    <input type="text" 
+                        id="compte-search" 
+                        placeholder="Tapez un numéro de compte..." 
+                        value="<?= $numeroDeCompte ?? '' ?>"
+                        autocomplete="off">
+                    
+                    <div id="autocomplete-list" class="autocomplete-items"></div>
+                </div>
 
-<script>
-// Liste des comptes depuis PHP
-const comptes = <?= json_encode(array_map(function($c) {
-    return [
-        'numero' => $c->getNumeroDeCompte(),
-        'type' => $c->getType()->value,
-        'solde' => $c->getSolde()
-    ];
-}, $comptes)) ?>;
 
-const searchInput = document.getElementById('compte-search');
-const autocompleteList = document.getElementById('autocomplete-list');
 
-// Fonction de recherche en temps réel
-searchInput.addEventListener('input', function() {
-    const searchTerm = this.value.trim().toUpperCase();
-    
-    // Vider la liste
-    autocompleteList.innerHTML = '';
-    
-    // Si vide, cacher
-    if (!searchTerm) {
-        autocompleteList.style.display = 'none';
-        return;
-    }
-    
-    // Filtrer les comptes qui contiennent le texte
-    const filteredComptes = comptes.filter(c => 
-        c.numero.toUpperCase().includes(searchTerm)
-    );
-    
-    // Aucun résultat
-    if (filteredComptes.length === 0) {
-        autocompleteList.innerHTML = '<div class="autocomplete-item no-result">Aucun compte trouvé</div>';
-        autocompleteList.style.display = 'block';
-        return;
-    }
-    
-    // Afficher les résultats
-    filteredComptes.forEach(compte => {
-        const item = document.createElement('div');
-        item.className = 'autocomplete-item';
-        
-        // Surligner le texte recherché
-        const regex = new RegExp(`(${searchTerm})`, 'gi');
-        const highlighted = compte.numero.replace(regex, '<mark>$1</mark>');
-        
-        item.innerHTML = `
-            <div class="compte-info">
-                <strong>${highlighted}</strong>
-                <span class="compte-details">
-                    <span class="badge badge-${compte.type === 'Courant' ? 'blue' : compte.type === 'Epargne' ? 'green' : 'orange'}">
-                        ${compte.type}
-                    </span>
-                    ${Number(compte.solde).toLocaleString('fr-FR')} FCFA
-                </span>
-            </div>
-        `;
-        
-        // ✅ Rediriger avec le numéro de compte dans l'URL
-        item.addEventListener('click', function() {
-            window.location.href = '<?= WEB_ROOT ?>/?controller=transaction&action=list&numeroDeCompte=' + compte.numero;
-        });
-        
-        autocompleteList.appendChild(item);
-    });
-    
-    autocompleteList.style.display = 'block';
-});
+                <script>
+                    <?php include_once __DIR__ . '/../../public/js/indexTransac.js'; ?>
+                </script>
 
-// Navigation au clavier (Entrée pour sélectionner le premier)
-searchInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        const firstItem = autocompleteList.querySelector('.autocomplete-item:not(.no-result)');
-        if (firstItem) {
-            firstItem.click();
-        }
-    }
-});
-
-// Fermer si on clique ailleurs
-document.addEventListener('click', function(e) {
-    if (!e.target.closest('.autocomplete-container')) {
-        autocompleteList.style.display = 'none';
-    }
-});
-
-// Ouvrir la liste au focus
-searchInput.addEventListener('focus', function() {
-    if (this.value && autocompleteList.children.length > 0) {
-        autocompleteList.style.display = 'block';
-    }
-});
-</script>
             </div>
 
         <?php endif; ?>

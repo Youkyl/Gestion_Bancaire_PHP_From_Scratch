@@ -26,16 +26,16 @@
             </div>
 
             <nav class="menu">
-                <a href="<?php echo WEB_ROOT; ?>/?controller=home&action=index">
+                <a href="<?php echo WEB_ROOT; ?>/home/index">
                     <i class="fa-solid fa-chart-line"></i> Tableau de bord
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=create">
+                <a href="<?php echo WEB_ROOT; ?>/compte/create">
                     <i class="fa-solid fa-user-plus"></i> Créer un compte
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=index" >
+                <a href="<?php echo WEB_ROOT; ?>/compte/index">
                     <i class="fa-solid fa-users"></i> Afficher les comptes
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=create" class="active">
+                <a href="<?php echo WEB_ROOT; ?>/transaction/create" class="active">
                     <i class="fa-solid fa-arrow-right-arrow-left"></i> Transactions
                 </a>
             </nav>
@@ -57,12 +57,12 @@
         </div>
 
         <div class="tabs">
-            <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=create">
+            <a href="<?php echo WEB_ROOT; ?>/transaction/create">
                 <div class="tab">
                     Ajouter une transaction
                 </div>
             </a>
-            <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=index">
+            <a href="<?php echo WEB_ROOT; ?>/transaction/index">
                 <div class="tab active">
                     Lister les transactions
                 </div>
@@ -130,7 +130,7 @@
                         
                         <!-- Précédent -->
                         <?php if ($pageEnCours > 1): ?>
-                            <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=list&numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $pageEnCours - 1 ?>" 
+                            <a href="<?php echo WEB_ROOT; ?>/transaction/index?numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $pageEnCours - 1 ?>" 
                                class="pagination-btn">
                                 <i class="fa-solid fa-chevron-left"></i> Précédent
                             </a>
@@ -148,7 +148,7 @@
                             
                             // Première page
                             if ($start > 1): ?>
-                                <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=list&numeroDeCompte=<?= $numeroDeCompte ?>&page=1" 
+                                <a href="<?php echo WEB_ROOT; ?>/transaction/list?numeroDeCompte=<?= $numeroDeCompte ?>&page=1" 
                                    class="pagination-number">1</a>
                                 <?php if ($start > 2): ?>
                                     <span class="pagination-dots">...</span>
@@ -157,7 +157,7 @@
                             
                             <!-- Pages autour de la page actuelle -->
                             <?php for ($i = $start; $i <= $end; $i++): ?>
-                                <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=list&numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $i ?>" 
+                                <a href="<?php echo WEB_ROOT; ?>/transaction/list?numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $i ?>" 
                                    class="pagination-number <?= $i == $pageEnCours ? 'active' : '' ?>">
                                     <?= $i ?>
                                 </a>
@@ -168,14 +168,14 @@
                                 <?php if ($end < $nbrPage - 1): ?>
                                     <span class="pagination-dots">...</span>
                                 <?php endif; ?>
-                                <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=list&numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $nbrPage ?>" 
+                                <a href="<?php echo WEB_ROOT; ?>/transaction/list?numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $nbrPage ?>" 
                                    class="pagination-number"><?= $nbrPage ?></a>
                             <?php endif; ?>
                         </div>
 
                         <!-- Suivant -->
                         <?php if ($pageEnCours < $nbrPage): ?>
-                            <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=list&numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $pageEnCours + 1 ?>" 
+                            <a href="<?php echo WEB_ROOT; ?>/transaction/list?numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $pageEnCours + 1 ?>" 
                                class="pagination-btn">
                                 Suivant <i class="fa-solid fa-chevron-right"></i>
                             </a>

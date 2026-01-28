@@ -18,16 +18,16 @@
             </div>
 
             <nav class="menu">
-                <a href="<?php echo WEB_ROOT; ?>/?controller=home&action=index">
+                <a href="<?php echo WEB_ROOT; ?>/home/index">
                     <i class="fa-solid fa-chart-line"></i> Tableau de bord
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=create">
+                <a href="<?php echo WEB_ROOT; ?>/compte/create">
                     <i class="fa-solid fa-user-plus"></i> Créer un compte
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=index" class="active">
+                <a href="<?php echo WEB_ROOT; ?>/compte/index" class="active">
                     <i class="fa-solid fa-users"></i> Afficher les comptes
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=create">
+                <a href="<?php echo WEB_ROOT; ?>/transaction/create">
                     <i class="fa-solid fa-arrow-right-arrow-left"></i> Transactions
                 </a>
             </nav>
@@ -45,7 +45,7 @@
 
         <div class="page-header">
             <h1>Liste des comptes</h1>
-            <p><?php echo count($comptes) ?> compte(s) enregistré(s)</p>
+            <p><?php echo ($totalComptes) ?> compte(s) enregistré(s)</p>
         </div>
 
         <div class="card">
@@ -99,7 +99,7 @@
                                 <?php endif; ?>
 
                                 <td><?= $compte->getDureeDeblocage()  ?? "none"  ?> </td>
-                                <td><a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=list&numeroDeCompte=<?= $compte->getNumeroDeCompte() ?>" 
+                                <td><a href="<?php echo WEB_ROOT; ?>/transaction/list?numeroDeCompte=<?= $compte->getNumeroDeCompte() ?>" 
                                class="pagination-btn">  Voir les transactions</a></td>
                             </tr>
                         <?php endforeach ?>
@@ -113,7 +113,7 @@
                         
                         <!-- Précédent -->
                         <?php if ($pageEnCours > 1): ?>
-                            <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=index&page=<?= $pageEnCours - 1 ?>" 
+                            <a href="<?php echo WEB_ROOT; ?>/compte/index?page=<?= $pageEnCours - 1 ?>" 
                                class="pagination-btn">
                                 <i class="fa-solid fa-chevron-left"></i> Précédent
                             </a>
@@ -131,7 +131,7 @@
                             
                             // Première page
                             if ($start > 1): ?>
-                                <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=index&page=1" 
+                                <a href="<?php echo WEB_ROOT; ?>/compte/index?page=1" 
                                    class="pagination-number">1</a>
                                 <?php if ($start > 2): ?>
                                     <span class="pagination-dots">...</span>
@@ -140,7 +140,7 @@
                             
                             <!-- Pages autour de la page actuelle -->
                             <?php for ($i = $start; $i <= $end; $i++): ?>
-                                <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=index&page=<?= $i ?>" 
+                                <a href="<?php echo WEB_ROOT; ?>/compte/index?page=<?= $i ?>" 
                                    class="pagination-number <?= $i == $pageEnCours ? 'active' : '' ?>">
                                     <?= $i ?>
                                 </a>
@@ -151,14 +151,14 @@
                                 <?php if ($end < $nbrPage - 1): ?>
                                     <span class="pagination-dots">...</span>
                                 <?php endif; ?>
-                                <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=index&page=<?= $nbrPage ?>" 
+                                <a href="<?php echo WEB_ROOT; ?>/compte/index?page=<?= $nbrPage ?>" 
                                    class="pagination-number"><?= $nbrPage ?></a>
                             <?php endif; ?>
                         </div>
 
                         <!-- Suivant -->
                         <?php if ($pageEnCours < $nbrPage): ?>
-                            <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=index&page=<?= $pageEnCours + 1 ?>" 
+                            <a href="<?php echo WEB_ROOT; ?>/compte/index?page=<?= $pageEnCours + 1 ?>" 
                                class="pagination-btn">
                                 Suivant <i class="fa-solid fa-chevron-right"></i>
                             </a>

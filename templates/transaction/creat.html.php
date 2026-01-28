@@ -26,16 +26,16 @@
             </div>
 
             <nav class="menu">
-                <a href="<?php echo WEB_ROOT; ?>/?controller=home&action=index">
+                <a href="<?php echo WEB_ROOT; ?>/home/index">
                     <i class="fa-solid fa-chart-line"></i> Tableau de bord
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=create">
+                <a href="<?php echo WEB_ROOT; ?>/compte/create">
                     <i class="fa-solid fa-user-plus"></i> Créer un compte
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=index" >
+                <a href="<?php echo WEB_ROOT; ?>/compte/index">
                     <i class="fa-solid fa-users"></i> Afficher les comptes
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=create" class="active">
+                <a href="<?php echo WEB_ROOT; ?>/transaction/create" class="active">
                     <i class="fa-solid fa-arrow-right-arrow-left"></i> Transactions
                 </a>
             </nav>
@@ -57,12 +57,12 @@
         </div>
 
         <div class="tabs">
-            <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=create">
+            <a href="<?php echo WEB_ROOT; ?>/transaction/create">
                 <div class="tab active">
                     Ajouter une transaction
                 </div>
             </a>
-            <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=index">
+            <a href="<?php echo WEB_ROOT; ?>/transaction/index">
                 <div class="tab">
                     Lister les transactions
                 </div>
@@ -89,7 +89,7 @@
                     <h3>Nouvelle transaction</h3>
                 </div>
 
-                <form method="POST" action="<?php echo WEB_ROOT ?>/?controller=transaction&action=store">
+                <form method="POST" action="<?php echo WEB_ROOT ?>/transaction/store">
 
                     <label>Rechercher un compte</label>
                     <div class="autocomplete-container">

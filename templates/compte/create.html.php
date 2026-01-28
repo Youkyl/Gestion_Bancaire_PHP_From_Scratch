@@ -11,16 +11,16 @@
             </div>
 
             <nav class="menu">
-                <a href="<?php echo WEB_ROOT; ?>/?controller=home&action=index" >
+                <a href="<?php echo WEB_ROOT; ?>/home/index" >
                     <i class="fa-solid fa-chart-line"></i> Tableau de bord
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=create" class="active">
+                <a href="<?php echo WEB_ROOT; ?>/compte/create" class="active">
                     <i class="fa-solid fa-user-plus"></i> Créer un compte
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=compte&action=index">
+                <a href="<?php echo WEB_ROOT; ?>/compte/index">
                     <i class="fa-solid fa-users"></i> Afficher les comptes
                 </a>
-                <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=create">
+                <a href="<?php echo WEB_ROOT; ?>/transaction/create">
                     <i class="fa-solid fa-arrow-right-arrow-left"></i> Transactions
                 </a>
             </nav>
@@ -47,7 +47,7 @@
                 <h3>Informations du compte</h3>
             </div>
 
-            <form method="POST" action="<?php echo WEB_ROOT ?>/?controller=compte&action=store">
+            <form method="POST" action="<?php echo WEB_ROOT ?>/compte/store">
                 <div class="form-group">
                     <label>Nom du titulaire</label>
                     <input type="text" name="titulaire" placeholder="Ex : Jean Dupont" required>
@@ -99,25 +99,5 @@
 
 <!-- JS léger -->
 <script>
-    const alertCheque = document.getElementById("alertCheque");
-    const typeCompte = document.getElementById("typeCompte");
-    const blocageEpargne = document.getElementById("blocageEpargne");
-
-    typeCompte.addEventListener("change", () => {
-        alerteCheque.classList.add("d-none");
-        blocageEpargne.classList.add("form-group");
-
-        if (typeCompte.value === "cheque") {
-            alerteCheque.classList.remove("d-none");
-        }
-
-        if (typeCompte.value === "epargne") {
-            blocageEpargne.classList.remove("d-none");
-        }
-    });
-
-    typeCompte.addEventListener("change", () => {
-        alertCheque.style.display =
-            typeCompte.value === "CHEQUE" ? "flex" : "none";
-    });
+     <?php include_once __DIR__ . '/../../public/js/CreateAcc.js'; ?>
 </script>

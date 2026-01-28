@@ -62,7 +62,7 @@ class CompteController extends Controller
     // }
 
 
-    public function index(Request $request) {
+public function index(Request $request) {
 
     $page = max(1, (int)$request->get("page", 1)); 
 
@@ -88,13 +88,13 @@ class CompteController extends Controller
     ]);
 }
 
-    public function create()
+public function create()
     {
         $this->renderHtml('compte/create.html.php');
     }
 
 
-    public function store()
+public function store()
     {
     
         $data = $_POST; 
