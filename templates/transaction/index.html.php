@@ -147,6 +147,166 @@
         /* EMPTY */
         .empty{text-align:center;padding:60px;color:#667085}
         .empty i{font-size:48px;color:#d0d5dd;margin-bottom:12px}
+        /* ========== AUTOCOMPLETE ========== */
+
+.autocomplete-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+}
+
+#compte-search {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    transition: all 0.3s;
+    background: white;
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+}
+
+#compte-search:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#compte-search::placeholder {
+    color: #9ca3af;
+    font-family: inherit;
+}
+
+.autocomplete-items {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 99;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    max-height: 350px;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    display: none;
+}
+
+.autocomplete-item {
+    padding: 14px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover {
+    background: #f9fafb;
+    padding-left: 20px;
+}
+
+.autocomplete-item.no-result {
+    color: #9ca3af;
+    cursor: default;
+    text-align: center;
+    font-style: italic;
+}
+
+.autocomplete-item.no-result:hover {
+    background: white;
+    padding-left: 16px;
+}
+
+.compte-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.compte-info strong {
+    color: #111827;
+    font-size: 16px;
+    font-family: 'Courier New', monospace;
+}
+
+.compte-info mark {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.compte-details {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* Badges */
+.badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-blue {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge-green {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-orange {
+    background: #fed7aa;
+    color: #92400e;
+}
+
+/* Scrollbar */
+.autocomplete-items::-webkit-scrollbar {
+    width: 8px;
+}
+
+.autocomplete-items::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 8px;
+}
+
+.autocomplete-items::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 8px;
+}
+
+.autocomplete-items::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .autocomplete-container {
+        max-width: 100%;
+    }
+    
+    #compte-search {
+        font-size: 14px;
+        padding: 10px 14px;
+    }
+    
+    .autocomplete-item {
+        padding: 12px 14px;
+    }
+}
     </style>
 </head>
 
@@ -218,16 +378,111 @@
 
             <div class="form-group">
                 
-                    <label>Sélectionner un compte</label>
-                    <select onchange="location.href=this.value">
-                        <option value="">-- Choisir --</option>
-                        <?php foreach ($comptes as $c): ?>
-                            <option value="<?= WEB_ROOT ?>/?controller=transaction&action=list&donnee=<?= $c->getNumeroDeCompte() ?>"
-                                <?= isset($compte) && $compte->getId()===$c->getId() ? 'selected':'' ?>>
-                                <?= $c->getNumeroDeCompte() ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+<label>Rechercher un compte</label>
+<div class="autocomplete-container">
+    <input type="text" 
+           id="compte-search" 
+           placeholder="Tapez un numéro de compte..." 
+           value="<?= $numeroDeCompte ?? '' ?>"
+           autocomplete="off">
+    
+    <div id="autocomplete-list" class="autocomplete-items"></div>
+</div>
+
+<script>
+// Liste des comptes depuis PHP
+const comptes = <?= json_encode(array_map(function($c) {
+    return [
+        'numero' => $c->getNumeroDeCompte(),
+        'type' => $c->getType()->value,
+        'solde' => $c->getSolde()
+    ];
+}, $comptes)) ?>;
+
+const searchInput = document.getElementById('compte-search');
+const autocompleteList = document.getElementById('autocomplete-list');
+
+// Fonction de recherche en temps réel
+searchInput.addEventListener('input', function() {
+    const searchTerm = this.value.trim().toUpperCase();
+    
+    // Vider la liste
+    autocompleteList.innerHTML = '';
+    
+    // Si vide, cacher
+    if (!searchTerm) {
+        autocompleteList.style.display = 'none';
+        return;
+    }
+    
+    // Filtrer les comptes qui contiennent le texte
+    const filteredComptes = comptes.filter(c => 
+        c.numero.toUpperCase().includes(searchTerm)
+    );
+    
+    // Aucun résultat
+    if (filteredComptes.length === 0) {
+        autocompleteList.innerHTML = '<div class="autocomplete-item no-result">Aucun compte trouvé</div>';
+        autocompleteList.style.display = 'block';
+        return;
+    }
+    
+    // Afficher les résultats
+    filteredComptes.forEach(compte => {
+        const item = document.createElement('div');
+        item.className = 'autocomplete-item';
+        
+        // Surligner le texte recherché
+        const regex = new RegExp(`(${searchTerm})`, 'gi');
+        const highlighted = compte.numero.replace(regex, '<mark>$1</mark>');
+        
+        item.innerHTML = `
+            <div class="compte-info">
+                <strong>${highlighted}</strong>
+                <span class="compte-details">
+                    <span class="badge badge-${compte.type === 'Courant' ? 'blue' : compte.type === 'Epargne' ? 'green' : 'orange'}">
+                        ${compte.type}
+                    </span>
+                    ${Number(compte.solde).toLocaleString('fr-FR')} FCFA
+                </span>
+            </div>
+        `;
+        
+        // ✅ Rediriger avec le numéro de compte dans l'URL
+        item.addEventListener('click', function() {
+            window.location.href = '<?= WEB_ROOT ?>/?controller=transaction&action=list&numeroDeCompte=' + compte.numero;
+        });
+        
+        autocompleteList.appendChild(item);
+    });
+    
+    autocompleteList.style.display = 'block';
+});
+
+// Navigation au clavier (Entrée pour sélectionner le premier)
+searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        const firstItem = autocompleteList.querySelector('.autocomplete-item:not(.no-result)');
+        if (firstItem) {
+            firstItem.click();
+        }
+    }
+});
+
+// Fermer si on clique ailleurs
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.autocomplete-container')) {
+        autocompleteList.style.display = 'none';
+    }
+});
+
+// Ouvrir la liste au focus
+searchInput.addEventListener('focus', function() {
+    if (this.value && autocompleteList.children.length > 0) {
+        autocompleteList.style.display = 'block';
+    }
+});
+</script>
             </div>
 
         <?php endif; ?>

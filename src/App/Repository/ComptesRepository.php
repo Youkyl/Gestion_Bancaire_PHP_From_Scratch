@@ -64,14 +64,30 @@ class ComptesRepository implements CompteRepositoryImp
 
 
     
-    public function selectAll(): array
+    public function selectAll($limit = null, $offset = null): array
     {
         
-//dd($this->db);
-        $stmt = $this->db->query("SELECT * FROM compte
-            ORDER BY numero_compte ASC");
+        // $stmt = $this->db->query("SELECT * FROM compte
+        //     ORDER BY numero_compte ASC");
+
+        $sql = "SELECT * FROM compte ORDER BY numero_compte ASC";
         $comptes = [];
 
+
+        if ($limit !== null) {
+            $sql .= " LIMIT :limit OFFSET :offset";
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        
+        
+        if ($limit !== null) {
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+        
         while ($row = $stmt->fetch()) {
             $comptes[] = new Comptes(
                 numeroDeCompte: $row['numero_compte'],
@@ -137,6 +153,11 @@ class ComptesRepository implements CompteRepositoryImp
         return intval($row['max']);
     }
 
+
+public function count() : int {
+    $sql = "SELECT COUNT(*) FROM compte";
+    return $this->db->query($sql)->fetchColumn();
+}
 
 
 

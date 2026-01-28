@@ -53,11 +53,16 @@ class ComptesService
         
     }
 
-    public function searchAcc() : array{
-        return $this->comptesRepo->selectAll();
+    public function searchAcc($limit = null, $offset = null) : array{
+        return $this->comptesRepo->selectAll($limit, $offset);
     }
 
     public function searchAccByNum($numeroDeCompte) :Comptes{
         return $this->comptesRepo->selectAccByNum($numeroDeCompte);
     }
+
+    public function getNumberOfAcc() : int{
+        return $this->comptesRepo->count();
+    }
+    
 }

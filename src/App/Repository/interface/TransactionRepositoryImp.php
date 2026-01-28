@@ -13,4 +13,6 @@ interface TransactionRepositoryImp{
 
     public function selectAll(): array;
 
+    public function countAllTransactions() : int;
+
 }

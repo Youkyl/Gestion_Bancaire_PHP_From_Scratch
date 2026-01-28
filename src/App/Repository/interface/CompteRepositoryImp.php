@@ -15,4 +15,5 @@ interface CompteRepositoryImp{
     public function selectAccByNum(string $numeroDeCompte) : Comptes ;
 
     public function lastInserId() : int;
+    public function count() : int;
 }

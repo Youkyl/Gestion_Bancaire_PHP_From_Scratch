@@ -10,144 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-        body{background:#f9fafb;color:#101828}
-        .app{display:flex;min-height:100vh}
-        a{
-            text-decoration: none;
-        }
-
-/* ================= SIDEBAR ================= */
-.sidebar {
-    width: 260px;
-    background: #101828;
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.sidebar-header {
-    padding: 24px;
-    border-bottom: 1px solid #1e2939;
-}
-
-.sidebar-header h2 {
-    font-size: 18px;
-}
-
-.sidebar-header p {
-    font-size: 12px;
-    color: #98a2b3;
-    margin-top: 4px;
-}
-
-.menu {
-    padding: 16px;
-}
-
-.menu a {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    height: 48px;
-    padding: 0 16px;
-    margin-bottom: 8px;
-    border-radius: 10px;
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 14px;
-    transition: background 0.2s ease;
-}
-
-/* ==== ICÔNES SIDEBAR ==== */
-.menu a i {
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    color: #c7d2fe;
-}
-
-.menu a.active {
-    background: #155dfc;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
-}
-
-.menu a.active i {
-    color: #ffffff;
-}
-
-.menu a:hover {
-    background: #1e2939;
-}
-
-.logout {
-    padding: 16px;
-    border-top: 1px solid #1e2939;
-}
-
-.logout a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 12px;
-    border-radius: 10px;
-    color: #ffffff;
-    text-decoration: none;
-}
-
-.logout i {
-    font-size: 16px;
-    color: #fda4af;
-}
-
-.logout a:hover {
-    background: #1e2939;
-}
-
-
-        /* MAIN */
-        .main{flex:1;padding:32px}
-        .page-header h1{font-size:28px}
-        .page-header p{margin-top:6px;color:#475467}
-
-        /* TABS */
-        .tabs{margin-top:24px;display:flex;gap:12px}
-        .tab{padding:10px 18px;border-radius:8px;border:1px solid #d0d5dd;background:#fff}
-        .tab.active{background:#155dfc;color:#fff;border-color:#155dfc}
-
-        /* CARD */
-        .card{margin-top:24px;background:#fff;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);padding:24px}
-
-        /* FORM */
-        .form-group{margin-bottom:20px}
-        label{display:block;margin-bottom:6px;font-size:14px}
-        select{width:100%;padding:14px;border-radius:8px;border:1px solid #d0d5dd}
-
-        /* INFO */
-        .info{display:flex;justify-content:space-between;align-items:center;background:#f0f7ff;padding:16px;border-radius:10px;margin-bottom:20px}
-        .info strong{font-size:18px}
-
-        /* TABLE */
-        table{width:100%;border-collapse:collapse}
-        th{font-size:12px;color:#667085;padding:12px;text-align:left}
-        td{padding:14px;border-top:1px solid #f0f2f5;font-size:14px}
-        .badge{padding:4px 10px;border-radius:6px;font-size:12px}
-        .green{background:#ecfdf3;color:#027a48}
-        .red{background:#fef2f2;color:#b42318}
-        .amount-plus{color:#16a34a}
-        .amount-minus{color:#dc2626}
-
-        /* EMPTY */
-        .empty{text-align:center;padding:60px;color:#667085}
-        .empty i{font-size:48px;color:#d0d5dd;margin-bottom:12px}
-    </style>
+    <link rel="stylesheet" href="<?php echo CSS_ROOT; ?>/ListTransac.css">
 </head>
 
 <body>
@@ -258,6 +121,77 @@
                         </tbody>
                     </table>
 
+                <?php endif; ?>
+
+                <!-- ✅ PAGINATION -->
+                <?php if (isset($nbrPage) && $nbrPage > 1): ?>
+                <div class="pagination-container">
+                    <nav class="pagination">
+                        
+                        <!-- Précédent -->
+                        <?php if ($pageEnCours > 1): ?>
+                            <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=list&numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $pageEnCours - 1 ?>" 
+                               class="pagination-btn">
+                                <i class="fa-solid fa-chevron-left"></i> Précédent
+                            </a>
+                        <?php else: ?>
+                            <span class="pagination-btn disabled">
+                                <i class="fa-solid fa-chevron-left"></i> Précédent
+                            </span>
+                        <?php endif; ?>
+
+                        <!-- Numéros de pages -->
+                        <div class="pagination-numbers">
+                            <?php
+                            $start = max(1, $pageEnCours - 2);
+                            $end = min($nbrPage, $pageEnCours + 2);
+                            
+                            // Première page
+                            if ($start > 1): ?>
+                                <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=list&numeroDeCompte=<?= $numeroDeCompte ?>&page=1" 
+                                   class="pagination-number">1</a>
+                                <?php if ($start > 2): ?>
+                                    <span class="pagination-dots">...</span>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            
+                            <!-- Pages autour de la page actuelle -->
+                            <?php for ($i = $start; $i <= $end; $i++): ?>
+                                <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=list&numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $i ?>" 
+                                   class="pagination-number <?= $i == $pageEnCours ? 'active' : '' ?>">
+                                    <?= $i ?>
+                                </a>
+                            <?php endfor; ?>
+                            
+                            <!-- Dernière page -->
+                            <?php if ($end < $nbrPage): ?>
+                                <?php if ($end < $nbrPage - 1): ?>
+                                    <span class="pagination-dots">...</span>
+                                <?php endif; ?>
+                                <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=list&numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $nbrPage ?>" 
+                                   class="pagination-number"><?= $nbrPage ?></a>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Suivant -->
+                        <?php if ($pageEnCours < $nbrPage): ?>
+                            <a href="<?php echo WEB_ROOT; ?>/?controller=transaction&action=list&numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $pageEnCours + 1 ?>" 
+                               class="pagination-btn">
+                                Suivant <i class="fa-solid fa-chevron-right"></i>
+                            </a>
+                        <?php else: ?>
+                            <span class="pagination-btn disabled">
+                                Suivant <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        <?php endif; ?>
+                        
+                    </nav>
+                    
+                    <!-- Info pagination -->
+                    <p class="pagination-info">
+                        Page <strong><?= $pageEnCours ?></strong> sur <strong><?= $nbrPage ?></strong>
+                    </p>
+                </div>
                 <?php endif; ?>
 
             <?php endif; ?>

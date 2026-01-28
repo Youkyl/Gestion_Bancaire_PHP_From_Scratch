@@ -91,11 +91,19 @@ class TransactionService
     }
 
 
-    public function searchTransacByACC($numeroDeCompte): array{
-        return $this->transactionRepo->selectTransaction($numeroDeCompte);
+    public function searchTransacByACC($numeroDeCompte, $limit = null, $offset = null): array{
+        return $this->transactionRepo->selectTransaction($numeroDeCompte, $limit, $offset);
     }
 
-    public function searchTransac(): array{
-        return $this->transactionRepo->selectAll();
+    public function searchTransac($limit = null, $offset = null): array{
+        return $this->transactionRepo->selectAll($limit, $offset);
+    }
+
+    public function getNumberOfTransactions() : int{
+        return $this->transactionRepo->countAllTransactions();
+    }
+
+    public function countTransacByAcc() : array{
+        return $this->transactionRepo->countTransactionsByAccount();
     }
 }

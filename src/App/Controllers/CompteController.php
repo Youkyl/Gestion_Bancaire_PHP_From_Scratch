@@ -7,6 +7,7 @@ use App\core\Route;
 use App\core\Validator;
 use App\entity\Comptes;
 use App\entity\TypeDeCompte;
+use App\http\Request;
 use App\service\ComptesService;
 use App\service\TransactionService;
 
@@ -31,24 +32,61 @@ class CompteController extends Controller
         return self::$instance;
     }
     
-    public function index()
-    {
-        $comptes =  $this->compteService->searchAcc();
-        $transactions = $this->transacServ->searchTransac();
+    // public function index()
+    // {
 
-        $nbrTransac = 0;
+    //     $page = $request->query->get("page", 1);
+    //     $offset = (LIMIT_PAR_PAGE * $page) - LIMIT_PAR_PAGE;
+    //     $count = $this->compteService->count();
+    //     $nbrPage = ceil($count / LIMIT_PAR_PAGE);
 
-        foreach ($comptes as $compte) {
-            $nbrTransac = ($this->transacServ->searchTransacByACC($compte->getNumeroDeCompte())) ;
+    //     $comptes =  $this->compteService->searchAcc();
+    //     $transactions = $this->transacServ->searchTransac();
+
+    //     $nbrTransac = 0;
+
+    //     foreach ($comptes as $compte) {
+    //         $nbrTransac = ($this->transacServ->searchTransacByACC($compte->getNumeroDeCompte())) ;
             
             
-            //$nbrTransac += $compte->getTransactions();
-        }
-        //dd($nbrTransac);
+    //         //$nbrTransac += $compte->getTransactions();
+    //     }
+    //     //dd($nbrTransac);
 
-        $this->renderHtml('compte/index.html.php', ['comptes' => $comptes,
-                                                    'nbrTransac' => $nbrTransac]);
-    }
+    //     $this->renderHtml('compte/index.html.php', [
+    //         'comptes' => $comptes,
+    //         'nbrTransac' => $nbrTransac,
+    //         'nbrPage' => $nbrPage,
+    //         'pageEnCours' => $page,
+    //                                                 ]);
+    // }
+
+
+    public function index(Request $request) {
+
+    $page = max(1, (int)$request->get("page", 1)); 
+
+    $limit = LIMIT_PAR_PAGE;
+    $offset = ($page - 1) * $limit; 
+    
+    
+    $totalComptes = $this->compteService->getNumberOfAcc();
+    $nbrPage = ceil($totalComptes / $limit);
+    
+    
+    $comptes = $this->compteService->searchAcc($limit, $offset);
+    
+    
+    $nbrTransac = $this->transacServ->countTransacByAcc();
+    
+    $this->renderHtml('compte/index.html.php', [
+        'comptes' => $comptes,
+        'nbrTransac' => $nbrTransac,
+        'nbrPage' => $nbrPage,
+        'pageEnCours' => $page,
+        'totalComptes' => $totalComptes,
+    ]);
+}
 
     public function create()
     {

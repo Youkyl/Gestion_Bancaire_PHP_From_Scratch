@@ -73,7 +73,7 @@ class TransactionRepository implements TransactionRepositoryImp
 }
 
 
-    public function selectTransaction(string $numeroDeCompte):array{
+    public function selectTransaction(string $numeroDeCompte, $limit = null, $offset = null):array{
 
 
         $sql = "
@@ -82,10 +82,26 @@ class TransactionRepository implements TransactionRepositoryImp
             ORDER BY date_transaction DESC
         ";
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([':num' => $numeroDeCompte]);
 
         $transactions = [];
+
+        
+        if ($limit !== null) {
+            $sql .= " LIMIT :limit OFFSET :offset";
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        
+        
+        if ($limit !== null) {
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        }
+
+    
+        $stmt->bindValue(':num', $numeroDeCompte, PDO::PARAM_STR);
+        
+        $stmt->execute();
 
         while ($row = $stmt->fetch()) {
             $transactions[] = new Transaction(
@@ -102,10 +118,25 @@ class TransactionRepository implements TransactionRepositoryImp
         return $transactions;
     }
 
-    public function selectAll(): array
+    public function selectAll($limit = null, $offset = null): array
     {
-        $stmt = $this->db->query("SELECT * FROM transaction");
+        //$stmt = $this->db->query("SELECT * FROM transaction");
+        $sql = "SELECT * FROM transaction ORDER BY date_transaction DESC";
         $transactions = [];
+
+        if ($limit !== null) {
+            $sql .= " LIMIT :limit OFFSET :offset";
+        }
+        
+        $stmt = $this->db->prepare($sql);
+        
+        
+        if ($limit !== null) {
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
 
         while ($row = $stmt->fetch()) {
             $transactions[] = new Transaction(
@@ -118,4 +149,33 @@ class TransactionRepository implements TransactionRepositoryImp
 
         return $transactions;
     }
+
+    
+public function countAllTransactions() : int {
+    $sql = "SELECT COUNT(*) FROM transaction";
+    return $this->db->query($sql)->fetchColumn();
+}
+
+/**
+ * Compte le nombre de transactions pour chaque compte
+ * @return array ['CPT00001' => 5, 'CPT00002' => 3, ...]
+ */
+public function countTransactionsByAccount(): array
+{
+    $sql = "
+        SELECT numero_compte, COUNT(*) as total
+        FROM transaction
+        GROUP BY numero_compte
+    ";
+    
+    $stmt = $this->db->query($sql);
+    $result = [];
+    
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $result[$row['numero_compte']] = (int)$row['total'];
+    }
+    
+    return $result;
+}
+
 }

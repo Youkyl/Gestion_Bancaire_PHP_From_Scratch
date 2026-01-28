@@ -1,157 +1,114 @@
+// Liste des comptes depuis PHP
+const comptes = <?= json_encode(array_map(function($c) {
+return [
+    'numero' => $c->getNumeroDeCompte(),
+    'type' => $c->getType()->value,
+    'solde' => $c->getSolde()
+];
+}, $comptes)) ?>;
 
+const searchInput = document.getElementById('compte-search');
+const autocompleteList = document.getElementById('autocomplete-list');
 
+// Fonction de recherche en temps réel
+searchInput.addEventListener('input', function() {
+const searchTerm = this.value.trim().toUpperCase();
+
+// Vider la liste
+autocompleteList.innerHTML = '';
+
+// Si vide, cacher
+if (!searchTerm) {
+    autocompleteList.style.display = 'none';
+    return;
+}
+
+// Filtrer les comptes qui contiennent le texte
+const filteredComptes = comptes.filter(c => 
+    c.numero.toUpperCase().includes(searchTerm)
+);
+
+// Aucun résultat
+if (filteredComptes.length === 0) {
+    autocompleteList.innerHTML = '<div class="autocomplete-item no-result">Aucun compte trouvé</div>';
+    autocompleteList.style.display = 'block';
+    return;
+}
+
+// Afficher les résultats
+filteredComptes.forEach(compte => {
+    const item = document.createElement('div');
+    item.className = 'autocomplete-item';
     
-    const comptes = [
-        {
-            id: 1,
-            numero: 'FR571889690521',
-            nom: 'Hounkpatin Youan',
-            type: 'cheque',
-            solde: 1000000.00,
-            frais: 0.008 
-        },
-        {
-            id: 2,
-            numero: 'FR018802782931',
-            nom: 'Gerard OKB',
-            type: 'epargne',
-            solde: 10000000.00,
-            bloque: true,
-            dateDeblocage: '22/12/2026'
-        }
-    ];
-
-    //comptes = [];
-
-
-    let selectedAccount = null;
-    let transactionType = 'retrait'; 
-
+    // Surligner le texte recherché
+    const regex = new RegExp(`(${searchTerm})`, 'gi');
+    const highlighted = compte.numero.replace(regex, '<mark>$1</mark>');
     
-    const accountSelect = document.getElementById('accountSelect');
-    comptes.forEach(compte => {
-        const option = document.createElement('option');
-        option.value = compte.id;
-        option.textContent = `${compte.nom} - ${compte.numero}`;
-        accountSelect.appendChild(option);
+    item.innerHTML = `
+        <div class="compte-info">
+            <strong>${highlighted}</strong>
+            <span class="compte-details">
+                <span class="badge badge-${compte.type === 'Courant' ? 'blue' : compte.type === 'Epargne' ? 'green' : 'orange'}">
+                    ${compte.type}
+                </span>
+                ${Number(compte.solde).toLocaleString('fr-FR')} FCFA
+            </span>
+        </div>
+    `;
+    
+    // ✅ Rediriger avec le numéro de compte dans l'URL
+    item.addEventListener('click', function() {
+        // Remplir le champ de recherche et cacher la liste
+        searchInput.value = compte.numero;
+        autocompleteList.style.display = 'none';
     });
-
     
-    accountSelect.addEventListener('change', function() {
-        const accountId = parseInt(this.value);
-        selectedAccount = comptes.find(c => c.id === accountId);
-        updateAccountInfo();
-        updateSubmitButton();
-    });
+    autocompleteList.appendChild(item);
+});
 
-    
-    const depotBtn = document.getElementById('depotBtn');
-    const retraitBtn = document.getElementById('retraitBtn');
-    const submitBtn = document.getElementById('submitBtn');
+autocompleteList.style.display = 'block';
+});
 
-    depotBtn.addEventListener('click', function() {
-        transactionType = 'depot';
-        depotBtn.classList.add('active', 'depot');
-        retraitBtn.classList.remove('active', 'retrait');
-        submitBtn.classList.remove('retrait');
-        submitBtn.classList.add('depot');
-        submitBtn.innerHTML = '<i class="bi bi-check-circle"></i> Valider la transaction';
-        updateAccountInfo();
-        updateSubmitButton();
-    });
-
-    retraitBtn.addEventListener('click', function() {
-        transactionType = 'retrait';
-        retraitBtn.classList.add('active', 'retrait');
-        depotBtn.classList.remove('active', 'depot');
-        submitBtn.classList.remove('depot');
-        submitBtn.classList.add('retrait');
-        submitBtn.innerHTML = '<i class="bi bi-check-circle"></i> Valider la transaction';
-        updateAccountInfo();
-        updateSubmitButton();
-    });
-
-    
-    retraitBtn.click();
-
-    
-    function updateAccountInfo() {
-        const accountInfo = document.getElementById('accountInfo');
-        
-        if (!selectedAccount) {
-            accountInfo.style.display = 'none';
-            return;
-        }
-
-        accountInfo.style.display = 'block';
-        let infoHTML = '';
-
-        
-        const soldeFormatted = selectedAccount.solde.toLocaleString('fr-FR', {minimumFractionDigits: 2});
-        infoHTML += `<div class="info-box">
-            <p class="info-text balance">Solde actuel: <strong>${soldeFormatted} FCFA</strong></p>`;
-
-            
-        if (selectedAccount.type === 'cheque') {
-            const fraisPercent = (selectedAccount.frais * 100).toFixed(1);
-            infoHTML += `<p class="info-text fee">⚠️ Frais de transaction: ${fraisPercent}% du montant</p>`;
-        }
-
-        infoHTML += '</div>';
-
-        
-        if (selectedAccount.type === 'epargne' && selectedAccount.bloque && transactionType === 'retrait') {
-            infoHTML += `<div class="info-box danger">
-                <p class="info-text blocked">🔒 Compte bloqué - Retraits non autorisés jusqu'au ${selectedAccount.dateDeblocage}</p>
-            </div>`;
-        }
-
-        accountInfo.innerHTML = infoHTML;
+// Navigation au clavier (Entrée pour sélectionner le premier)
+searchInput.addEventListener('keydown', function(e) {
+if (e.key === 'Enter') {
+    const firstItem = autocompleteList.querySelector('.autocomplete-item:not(.no-result)');
+    if (firstItem) {
+        firstItem.click();
     }
-    
+}
+});
 
-    function updateSubmitButton() {
-        const canSubmit = selectedAccount && (!selectedAccount.bloque || transactionType === 'depot' || selectedAccount.type !== 'epargne');
-        submitBtn.disabled = !canSubmit;
-    }
+// Fermer si on clique ailleurs
+document.addEventListener('click', function(e) {
+if (!e.target.closest('.autocomplete-container')) {
+    autocompleteList.style.display = 'none';
+}
+});
 
-    
+// Ouvrir la liste au focus
+searchInput.addEventListener('focus', function() {
+if (this.value && autocompleteList.children.length > 0) {
+    autocompleteList.style.display = 'block';
+}
+});
 
-    document.getElementById('transactionForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const amount = parseFloat(document.getElementById('amount').value);
-        const description = document.getElementById('description').value;
 
-        
-        if (selectedAccount.type === 'epargne' && selectedAccount.bloque && transactionType === 'retrait') {
-            alert('Impossible: Ce compte épargne est bloqué jusqu\'au ' + selectedAccount.dateDeblocage);
-            return;
-        }
+const btnDepot = document.getElementById("btnDepot");
+const btnRetrait = document.getElementById("btnRetrait");
+const typeInput = document.getElementById("typeTransaction");
+const submitBtn = document.getElementById("btnSubmit");
 
-        
-        if (transactionType === 'retrait') {
-            let totalAmount = amount;
-            if (selectedAccount.type === 'cheque') {
-                totalAmount += amount * selectedAccount.frais;
-            }
-            
-            if (totalAmount > selectedAccount.solde) {
-                alert('Solde insuffisant pour effectuer cette transaction');
-                return;
-            }
-        }
+btnDepot.onclick = () => {
+    btnDepot.classList.add("active");
+    btnRetrait.classList.remove("active");
+    typeInput.value = "DEPOT";
+    submitBtn.className = "btn-submit btn-green";
+};
 
-        
-        /*console.log({
-            compte: selectedAccount,
-            type: transactionType,
-            montant: amount,
-            description: description
-        });*/
-
-        alert('Transaction effectuée avec succès!');
-        
-        //window.location.href = 'index.html';
-    });
-    
+btnRetrait.onclick = () => {
+    btnRetrait.classList.add("active");
+    btnDepot.classList.remove("active");
+    typeInput.value = "RETRAIT";
+    submitBtn.className = "btn-submit btn-red";
+};

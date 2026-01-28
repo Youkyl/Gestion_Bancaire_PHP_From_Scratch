@@ -2,6 +2,9 @@
 
 namespace App\core;
 
+use App\http\Request;
+use ReflectionMethod;
+
 class Router
 {
 
@@ -39,6 +42,7 @@ class Router
 
         $controller = $_REQUEST['controller'] ?? 'home';  //ucfirst(home) ==> Home
         $action     = $_REQUEST['action'] ?? 'index';
+
         $donnee     = $_REQUEST['donnee'] ?? null;
 
         $controllerClass = 'App\\Controllers\\' . ucfirst($controller) . 'Controller';
@@ -55,7 +59,18 @@ class Router
             echo "Action introuvable";
             return;
         }
+
+        $request = Request::createFromGlobals();
+
+        $reflection = new ReflectionMethod($controllerInstance, $action);
+        $parameters = $reflection->getParameters();
+
+        if (count($parameters) > 0) {
+            $controllerInstance->$action($request);
+        } else {
+            $controllerInstance->$action();
+        }
         
-        $controllerInstance->$action($donnee);
+       // $controllerInstance->$action($donnee, $request);
     }
 }
