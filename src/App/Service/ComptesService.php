@@ -15,7 +15,7 @@ class ComptesService
 
     private function __construct()
     {
-        $this->comptesRepo =  ComptesRepository::getInstance();
+        $this->comptesRepo =  ComptesRepository::getInstance(); 
     }
 
 
