@@ -1,5 +1,15 @@
-
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer un compte | Admin Bancaire</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo CSS_ROOT; ?>/CreateAcc.css"> 
+</head>
+<body>
+
 <div class="app">
 
     <!-- SIDEBAR -->
@@ -95,9 +105,10 @@
 
 </div>
 
-
-
 <!-- JS léger -->
 <script>
      <?php include_once __DIR__ . '/../../public/js/CreateAcc.js'; ?>
 </script>
+
+</body>
+</html>

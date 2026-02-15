@@ -8,6 +8,7 @@
     <meta charset="UTF-8">
     <title>Gestion des transactions | Admin Bancaire</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo CSS_ROOT; ?>/ListTransac.css">
@@ -94,32 +95,34 @@
                 <?php else: ?>
 
                     <!-- ÉTAT 3 : TABLE -->
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>DATE</th>
-                                <th>TYPE</th>
-                                <th>DESCRIPTION</th>
-                                <th>MONTANT</th>
-                                <th>FRAIS</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php foreach ($transactions as $t): ?>
-                            <tr>
-                                <td><?= $t->getDate() ?></td>
-                                <td>
-                                    <?= $t->getType()->value  ?>
-                                </td>
-                                <td>None</td>
-                                <td >
-                                    <?= number_format($t->getMontant(),2,',',' ') ?> FCFA
-                                </td>
-                                <td><?= number_format($t->getFrais(),2,',',' ') ?> FCFA</td>
-                            </tr>
-                        <?php endforeach ?>
-                        </tbody>
-                    </table>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>DATE</th>
+                                    <th>TYPE</th>
+                                    <th>MONTANT</th>
+                                    <th>FRAIS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($transactions as $t): ?>
+                                <tr>
+                                    <td><?= date('d/m/Y', strtotime($t->getDate())) ?></td>
+                                    <td>
+                                        <span class="badge <?= $t->getType()->value === 'Entree' ? 'green' : 'red' ?>">
+                                            <?= $t->getType()->value  ?>
+                                        </span>
+                                    </td>
+                                    <td class="<?= $t->getType()->value === 'Entree' ? 'amount-plus' : 'amount-minus' ?>">
+                                        <?= $t->getType()->value === 'Entree'? '+' : '-' ?><?= number_format($t->getMontant(),2,',',' ') ?> FCFA
+                                    </td>
+                                    <td><?= number_format($t->getFrais(),2,',',' ') ?> FCFA</td>
+                                </tr>
+                            <?php endforeach ?>
+                            </tbody>
+                        </table>
+                    </div>
 
                 <?php endif; ?>
 

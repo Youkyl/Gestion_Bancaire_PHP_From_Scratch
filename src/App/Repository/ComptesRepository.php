@@ -36,8 +36,7 @@ class ComptesRepository implements CompteRepositoryImp
     try {
         $sql = "
             INSERT INTO compte (type, numero_compte, solde , duree_blocage ) 
-            VALUES(:type, :numero , :solde, :duree);
-        ";
+            VALUES(:type, :numero , :solde, :duree);";
         $numero = $compte->getNumeroDeCompte();
        // dd($numero);
        // dd($compte);
