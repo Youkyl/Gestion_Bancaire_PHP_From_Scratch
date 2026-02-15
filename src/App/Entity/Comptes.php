@@ -78,7 +78,7 @@ class Comptes
     public function getFraisTransaction(float $montant): float
     {
         if ($this->isCompteCheque()) {
-            return $montant * 0.8;
+            return $montant * 0.08;
         }
         return 0.0;
     }
@@ -98,7 +98,7 @@ class Comptes
         }
 
         if ($this->isCompteCheque()) {
-            $info .= ", Frais par transaction: 80%";
+            $info .= ", Frais par transaction: 8%";
         }
 
         return $info;
