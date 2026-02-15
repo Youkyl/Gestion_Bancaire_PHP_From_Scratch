@@ -1,4 +1,63 @@
-/vendor
-/env
-/.env.local
+# Variables d'environnement sensibles
 .env
+.env.local
+.env.*.local
+*.env
+
+# Dépendances Composer
+/vendor/
+composer.lock
+
+# Fichiers système
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDEs et éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+.project
+.settings/
+.buildpath
+nbproject/
+*.sublime-workspace
+*.sublime-project
+
+# Logs et fichiers temporaires
+*.log
+*.tmp
+*.temp
+/logs/
+/tmp/
+
+# Cache
+*.cache
+/cache/
+.phpunit.result.cache
+
+# Sauvegardes
+*.bak
+*.backup
+*.sql
+*.dump
+
+# Fichiers de build
+/build/
+/dist/
+
+# Node modules (si vous utilisez npm)
+/node_modules/
+package-lock.json
+yarn.lock
+
+# Ancien dossier env
+/env/
