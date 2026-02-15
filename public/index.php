@@ -3,9 +3,10 @@
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
 
-require_once dirname(__DIR__). '/vendor/autoload.php';
-require_once '../config/bootstrap.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+require_once dirname(__DIR__) . '/src/App/core/Router.php';
+require_once dirname(__DIR__) . '/config/bootstrap.php';
+require_once dirname(__DIR__) . '/src/App/core/Router.php';
 
-use App\core\Router;
-$router = new Router();
+$router = new \App\core\Router();
 $router->run();
