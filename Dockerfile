@@ -26,6 +26,9 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Copier tout le code de l'application
 COPY . .
 
+# Regenerer l'autoload apres copie du code (utile en mode optimise)
+RUN composer dump-autoload --optimize --no-interaction
+
 # Exposer le port (Render va définir $PORT dynamiquement)
 EXPOSE 8000
 
