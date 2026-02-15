@@ -28,10 +28,11 @@ git push origin main
 4. Configurez le service :
 
    - **Name** : `gestion-bancaire` (ou le nom de votre choix)
-   - **Runtime** : `PHP`
-   - **Build Command** : `composer install --no-dev --optimize-autoloader`
-   - **Start Command** : `php -S 0.0.0.0:$PORT -t public`
+   - **Runtime** : `Docker` (PHP n'est pas disponible, utilisez Docker)
    - **Plan** : `Free`
+   
+   > ⚠️ **Important** : Render détectera automatiquement le `Dockerfile` et l'utilisera pour construire l'image.
+   > Pas besoin de spécifier Build Command ou Start Command.
 
 ### 3. Configurer les variables d'environnement
 
@@ -46,8 +47,10 @@ DATABASE_URL=postgresql://neondb_owner:npg_XQumwsN2F5ce@ep-dry-feather-aielzske-
 1. Cliquez sur **"Create Web Service"**
 2. Render va automatiquement :
    - Cloner votre repository
-   - Installer les dépendances PHP avec Composer
-   - Démarrer votre serveur PHP
+   - Détecter le `Dockerfile`
+   - Construire l'image Docker (installer PHP 8.2, extensions PostgreSQL, Composer)
+   - Installer les dépendances PHP
+   - Démarrer le conteneur Docker avec votre serveur PHP
    - Vous fournir une URL publique (ex: `https://gestion-bancaire.onrender.com`)
 
 ## ✅ Vérification

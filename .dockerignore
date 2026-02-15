@@ -1,0 +1,48 @@
+# Fichiers Git
+.git
+.gitignore
+.gitattributes
+
+# Variables d'environnement
+.env
+.env.*
+*.env
+
+# Documentation
+README.md
+DEPLOY_RENDER.md
+*.md
+
+# Dépendances (seront réinstallées dans le conteneur)
+vendor/
+node_modules/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-*
+*.swp
+*.swo
+
+# Logs et temporaires
+*.log
+*.tmp
+/logs/
+/tmp/
+*.cache
+
+# Tests et CI
+.phpunit.result.cache
+phpunit.xml
+.github/
+
+# Docker
+docker-compose.yml
+docker-compose.override.yml
+Dockerfile
+.dockerignore
