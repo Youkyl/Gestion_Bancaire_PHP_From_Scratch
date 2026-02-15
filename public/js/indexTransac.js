@@ -7,6 +7,9 @@ const comptes = <?= json_encode(array_map(function($c) {
     ];
 }, $comptes)) ?>;
 
+const numberLocale = '<?= current_lang() === 'fr' ? 'fr-FR' : 'en-US' ?>';
+const noAccountFoundText = '<?= t('common.no_account_found') ?>';
+
 const searchInput = document.getElementById('compte-search');
 const autocompleteList = document.getElementById('autocomplete-list');
 
@@ -30,7 +33,7 @@ searchInput.addEventListener('input', function() {
     
     // Aucun résultat
     if (filteredComptes.length === 0) {
-        autocompleteList.innerHTML = '<div class="autocomplete-item no-result">Aucun compte trouvé</div>';
+        autocompleteList.innerHTML = `<div class="autocomplete-item no-result">${noAccountFoundText}</div>`;
         autocompleteList.style.display = 'block';
         return;
     }
@@ -51,14 +54,14 @@ searchInput.addEventListener('input', function() {
                     <span class="badge badge-${compte.type === 'Courant' ? 'blue' : compte.type === 'Epargne' ? 'green' : 'orange'}">
                         ${compte.type}
                     </span>
-                    ${Number(compte.solde).toLocaleString('fr-FR')} FCFA
+                    ${Number(compte.solde).toLocaleString(numberLocale)} FCFA
                 </span>
             </div>
         `;
         
         // ✅ Rediriger avec le numéro de compte dans l'URL
         item.addEventListener('click', function() {
-            window.location.href = '<?= WEB_ROOT ?>/transaction/index?numeroDeCompte=' + compte.numero;
+            window.location.href = '<?= WEB_ROOT ?>/transaction/list?numeroDeCompte=' + compte.numero;
         });
         
         autocompleteList.appendChild(item);

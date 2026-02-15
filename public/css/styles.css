@@ -325,7 +325,6 @@ body {
     font-size: 22px;
     box-shadow: 0 4px 12px rgba(21, 93, 252, 0.4);
     transition: all 0.3s ease, opacity 0.3s ease;
-    display: flex;
     align-items: center;
     justify-content: center;
 }

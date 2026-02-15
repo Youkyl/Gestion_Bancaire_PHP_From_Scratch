@@ -7,6 +7,9 @@ return [
 ];
 }, $comptes)) ?>;
 
+const numberLocale = '<?= current_lang() === 'fr' ? 'fr-FR' : 'en-US' ?>';
+const noAccountFoundText = '<?= t('common.no_account_found') ?>';
+
 const searchInput = document.getElementById('compte-search');
 const autocompleteList = document.getElementById('autocomplete-list');
 
@@ -30,7 +33,7 @@ const filteredComptes = comptes.filter(c =>
 
 // Aucun résultat
 if (filteredComptes.length === 0) {
-    autocompleteList.innerHTML = '<div class="autocomplete-item no-result">Aucun compte trouvé</div>';
+    autocompleteList.innerHTML = `<div class="autocomplete-item no-result">${noAccountFoundText}</div>`;
     autocompleteList.style.display = 'block';
     return;
 }
@@ -51,7 +54,7 @@ filteredComptes.forEach(compte => {
                 <span class="badge badge-${compte.type === 'Courant' ? 'blue' : compte.type === 'Epargne' ? 'green' : 'orange'}">
                     ${compte.type}
                 </span>
-                ${Number(compte.solde).toLocaleString('fr-FR')} FCFA
+                ${Number(compte.solde).toLocaleString(numberLocale)} FCFA
             </span>
         </div>
     `;

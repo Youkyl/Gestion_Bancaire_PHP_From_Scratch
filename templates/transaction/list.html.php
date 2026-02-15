@@ -3,10 +3,10 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<?= htmlspecialchars(current_lang()) ?>">
 <head>
     <meta charset="UTF-8">
-    <title>Gestion des transactions | Admin Bancaire</title>
+    <title><?= t('transaction.title') ?> | <?= t('app.admin_title') ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="format-detection" content="telephone=no">
 
@@ -22,22 +22,27 @@
     <aside class="sidebar">
         <div>
             <div class="sidebar-header">
-                <h2>Admin Bancaire</h2>
-                <p>Espace Administrateur</p>
+                <h2><?= t('app.admin_title') ?></h2>
+                <p><?= t('app.admin_space') ?></p>
+                <div class="lang-switch">
+                    <a href="<?= lang_switch_url('fr') ?>">FR</a>
+                    <span>|</span>
+                    <a href="<?= lang_switch_url('en') ?>">EN</a>
+                </div>
             </div>
 
             <nav class="menu">
                 <a href="<?php echo WEB_ROOT; ?>/home/index">
-                    <i class="fa-solid fa-chart-line"></i> Tableau de bord
+                    <i class="fa-solid fa-chart-line"></i> <?= t('menu.dashboard') ?>
                 </a>
                 <a href="<?php echo WEB_ROOT; ?>/compte/create">
-                    <i class="fa-solid fa-user-plus"></i> Créer un compte
+                    <i class="fa-solid fa-user-plus"></i> <?= t('menu.create_account') ?>
                 </a>
                 <a href="<?php echo WEB_ROOT; ?>/compte/index">
-                    <i class="fa-solid fa-users"></i> Afficher les comptes
+                    <i class="fa-solid fa-users"></i> <?= t('menu.list_accounts') ?>
                 </a>
                 <a href="<?php echo WEB_ROOT; ?>/transaction/create" class="active">
-                    <i class="fa-solid fa-arrow-right-arrow-left"></i> Transactions
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i> <?= t('menu.transactions') ?>
                 </a>
             </nav>
         </div>
@@ -53,19 +58,19 @@
 <main class="main">
 
 <div class="page-header">
-            <h1>Gestion des transactions</h1>
-            <p>Ajouter des dépôts/retraits et consulter l'historique</p>
+            <h1><?= t('transaction.title') ?></h1>
+            <p><?= t('transaction.subtitle') ?></p>
         </div>
 
         <div class="tabs">
             <a href="<?php echo WEB_ROOT; ?>/transaction/create">
                 <div class="tab">
-                    Ajouter une transaction
+                    <?= t('transaction.tab_add') ?>
                 </div>
             </a>
             <a href="<?php echo WEB_ROOT; ?>/transaction/index">
                 <div class="tab active">
-                    Lister les transactions
+                    <?= t('transaction.tab_list') ?>
                 </div>
             </a>
         </div>
@@ -75,11 +80,11 @@
 
                 <div class="info">
                     <div>
-                        <small>Titulaire</small><br>
+                        <small><?= t('common.account_holder') ?></small><br>
                         <strong>HOUNKPATIN Youan</strong>
                     </div>
                     <div>
-                        <small>Solde actuel</small><br>
+                        <small><?= t('common.current_balance') ?></small><br>
                         <strong><?= number_format($comptes->getSolde(),2,',',' ') ?> FCFA</strong>
                     </div>
                 </div>
@@ -89,7 +94,7 @@
                     <!-- ÉTAT 2 : AUCUNE TRANSACTION -->
                     <div class="empty">
                         <i class="fa-solid fa-triangle-exclamation"></i>
-                        <p>Aucune transaction enregistrée</p>
+                        <p><?= t('transaction.list.no_transactions') ?></p>
                     </div>
 
                 <?php else: ?>
@@ -99,10 +104,10 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>DATE</th>
-                                    <th>TYPE</th>
-                                    <th>MONTANT</th>
-                                    <th>FRAIS</th>
+                                    <th><?= t('transaction.list.date') ?></th>
+                                    <th><?= t('transaction.list.type') ?></th>
+                                    <th><?= t('transaction.list.amount') ?></th>
+                                    <th><?= t('transaction.list.fees') ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -135,11 +140,11 @@
                         <?php if ($pageEnCours > 1): ?>
                             <a href="<?php echo WEB_ROOT; ?>/transaction/index?numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $pageEnCours - 1 ?>" 
                                class="pagination-btn">
-                                <i class="fa-solid fa-chevron-left"></i> Précédent
+                                <i class="fa-solid fa-chevron-left"></i> <?= t('common.previous') ?>
                             </a>
                         <?php else: ?>
                             <span class="pagination-btn disabled">
-                                <i class="fa-solid fa-chevron-left"></i> Précédent
+                                <i class="fa-solid fa-chevron-left"></i> <?= t('common.previous') ?>
                             </span>
                         <?php endif; ?>
 
@@ -180,11 +185,11 @@
                         <?php if ($pageEnCours < $nbrPage): ?>
                             <a href="<?php echo WEB_ROOT; ?>/transaction/list?numeroDeCompte=<?= $numeroDeCompte ?>&page=<?= $pageEnCours + 1 ?>" 
                                class="pagination-btn">
-                                Suivant <i class="fa-solid fa-chevron-right"></i>
+                                <?= t('common.next') ?> <i class="fa-solid fa-chevron-right"></i>
                             </a>
                         <?php else: ?>
                             <span class="pagination-btn disabled">
-                                Suivant <i class="fa-solid fa-chevron-right"></i>
+                                <?= t('common.next') ?> <i class="fa-solid fa-chevron-right"></i>
                             </span>
                         <?php endif; ?>
                         
@@ -192,7 +197,7 @@
                     
                     <!-- Info pagination -->
                     <p class="pagination-info">
-                        Page <strong><?= $pageEnCours ?></strong> sur <strong><?= $nbrPage ?></strong>
+                        <?= t('common.page_info', ['current' => $pageEnCours, 'total' => $nbrPage]) ?>
                     </p>
                 </div>
                 <?php endif; ?>

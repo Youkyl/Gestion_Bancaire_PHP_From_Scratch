@@ -5,10 +5,10 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<?= htmlspecialchars(current_lang()) ?>">
 <head>
     <meta charset="UTF-8">
-    <title>Liste des comptes | Admin Bancaire</title>
+    <title><?= t('compte.index.title') ?> | <?= t('app.admin_title') ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="format-detection" content="telephone=no">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -22,22 +22,27 @@
     <aside class="sidebar">
         <div>
             <div class="sidebar-header">
-                <h2>Admin Bancaire</h2>
-                <p>Espace Administrateur</p>
+                <h2><?= t('app.admin_title') ?></h2>
+                <p><?= t('app.admin_space') ?></p>
+                <div class="lang-switch">
+                    <a href="<?= lang_switch_url('fr') ?>">FR</a>
+                    <span>|</span>
+                    <a href="<?= lang_switch_url('en') ?>">EN</a>
+                </div>
             </div>
 
             <nav class="menu">
                 <a href="<?php echo WEB_ROOT; ?>/home/index">
-                    <i class="fa-solid fa-chart-line"></i> Tableau de bord
+                    <i class="fa-solid fa-chart-line"></i> <?= t('menu.dashboard') ?>
                 </a>
                 <a href="<?php echo WEB_ROOT; ?>/compte/create">
-                    <i class="fa-solid fa-user-plus"></i> Créer un compte
+                    <i class="fa-solid fa-user-plus"></i> <?= t('menu.create_account') ?>
                 </a>
                 <a href="<?php echo WEB_ROOT; ?>/compte/index" class="active">
-                    <i class="fa-solid fa-users"></i> Afficher les comptes
+                    <i class="fa-solid fa-users"></i> <?= t('menu.list_accounts') ?>
                 </a>
                 <a href="<?php echo WEB_ROOT; ?>/transaction/create">
-                    <i class="fa-solid fa-arrow-right-arrow-left"></i> Transactions
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i> <?= t('menu.transactions') ?>
                 </a>
             </nav>
         </div>
@@ -53,8 +58,8 @@
     <main class="main">
 
         <div class="page-header">
-            <h1>Liste des comptes</h1>
-            <p><?php echo ($totalComptes) ?> compte(s) enregistré(s)</p>
+            <h1><?= t('compte.index.title') ?></h1>
+            <p><?= t('compte.index.subtitle', ['count' => $totalComptes]) ?></p>
         </div>
 
         <div class="card">
@@ -64,8 +69,8 @@
                 <!-- EMPTY STATE -->
                 <div class="empty">
                     <i class="fa-solid fa-credit-card"></i>
-                    <h3>Aucun compte créé</h3>
-                    <p>Créez votre premier compte pour commencer</p>
+                    <h3><?= t('compte.index.empty_title') ?></h3>
+                    <p><?= t('compte.index.empty_sub') ?></p>
                 </div>
 
             <?php else : ?>
@@ -74,14 +79,14 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>TITULAIRE</th>
-                            <th>NUMÉRO DE COMPTE</th>
-                            <th>TYPE</th>
-                            <th>STATUT</th>
-                            <th>SOLDE</th>
-                            <th>NOMBRE DE TRANSACTIONS</th>
-                            <th>DUREE DE BLOCAGE (mois)</th>
-                            <th>ACTION</th>
+                            <th><?= t('compte.index.th_holder') ?></th>
+                            <th><?= t('compte.index.th_number') ?></th>
+                            <th><?= t('compte.index.th_type') ?></th>
+                            <th><?= t('compte.index.th_status') ?></th>
+                            <th><?= t('compte.index.th_balance') ?></th>
+                            <th><?= t('compte.index.th_transactions') ?></th>
+                            <th><?= t('compte.index.th_block_duration') ?></th>
+                            <th><?= t('compte.index.th_action') ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,12 +100,12 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="badge badge-green">Actif</span>
+                                    <span class="badge badge-green"><?= t('compte.index.status_active') ?></span>
                                 </td>
                                 <td><?= number_format($compte->getSolde(),2,',',' ') ?> FCFA</td>
 
                                 <?php if (empty($nbrTransac)) : ?>
-                                    <td>Aucune transaction sur ce compte</td>
+                                    <td><?= t('compte.index.no_transactions') ?></td>
                                 <?php else : ?>
                                     
                                     <td><?php echo ($nbrTransac[$compte->getNumeroDeCompte()] ?? 0) ?></td>
@@ -109,7 +114,7 @@
 
                                 <td><?= $compte->getDureeDeblocage()  ?? "none"  ?> </td>
                                 <td><a href="<?php echo WEB_ROOT; ?>/transaction/list?numeroDeCompte=<?= $compte->getNumeroDeCompte() ?>" 
-                               class="pagination-btn">  Voir les transactions</a></td>
+                               class="pagination-btn">  <?= t('compte.index.view_transactions') ?></a></td>
                             </tr>
                         <?php endforeach ?>
                     </tbody>
@@ -124,11 +129,11 @@
                         <?php if ($pageEnCours > 1): ?>
                             <a href="<?php echo WEB_ROOT; ?>/compte/index?page=<?= $pageEnCours - 1 ?>" 
                                class="pagination-btn">
-                                <i class="fa-solid fa-chevron-left"></i> Précédent
+                                <i class="fa-solid fa-chevron-left"></i> <?= t('common.previous') ?>
                             </a>
                         <?php else: ?>
                             <span class="pagination-btn disabled">
-                                <i class="fa-solid fa-chevron-left"></i> Précédent
+                                <i class="fa-solid fa-chevron-left"></i> <?= t('common.previous') ?>
                             </span>
                         <?php endif; ?>
 
@@ -169,11 +174,11 @@
                         <?php if ($pageEnCours < $nbrPage): ?>
                             <a href="<?php echo WEB_ROOT; ?>/compte/index?page=<?= $pageEnCours + 1 ?>" 
                                class="pagination-btn">
-                                Suivant <i class="fa-solid fa-chevron-right"></i>
+                                <?= t('common.next') ?> <i class="fa-solid fa-chevron-right"></i>
                             </a>
                         <?php else: ?>
                             <span class="pagination-btn disabled">
-                                Suivant <i class="fa-solid fa-chevron-right"></i>
+                                <?= t('common.next') ?> <i class="fa-solid fa-chevron-right"></i>
                             </span>
                         <?php endif; ?>
                         
@@ -181,7 +186,7 @@
                     
                     <!-- Info pagination -->
                     <p class="pagination-info">
-                        Page <strong><?= $pageEnCours ?></strong> sur <strong><?= $nbrPage ?></strong>
+                        <?= t('common.page_info', ['current' => $pageEnCours, 'total' => $nbrPage]) ?>
                     </p>
                 </div>
                 <?php endif; ?>

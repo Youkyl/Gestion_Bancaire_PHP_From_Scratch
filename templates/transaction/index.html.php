@@ -3,10 +3,10 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<?= htmlspecialchars(current_lang()) ?>">
 <head>
     <meta charset="UTF-8">
-    <title>Gestion des transactions | Admin Bancaire</title>
+    <title><?= t('transaction.title') ?> | <?= t('app.admin_title') ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="format-detection" content="telephone=no">
 
@@ -22,22 +22,27 @@
     <aside class="sidebar">
         <div>
             <div class="sidebar-header">
-                <h2>Admin Bancaire</h2>
-                <p>Espace Administrateur</p>
+                <h2><?= t('app.admin_title') ?></h2>
+                <p><?= t('app.admin_space') ?></p>
+                <div class="lang-switch">
+                    <a href="<?= lang_switch_url('fr') ?>">FR</a>
+                    <span>|</span>
+                    <a href="<?= lang_switch_url('en') ?>">EN</a>
+                </div>
             </div>
 
             <nav class="menu">
                 <a href="<?php echo WEB_ROOT; ?>/home/index">
-                    <i class="fa-solid fa-chart-line"></i> Tableau de bord
+                    <i class="fa-solid fa-chart-line"></i> <?= t('menu.dashboard') ?>
                 </a>
                 <a href="<?php echo WEB_ROOT; ?>/compte/create">
-                    <i class="fa-solid fa-user-plus"></i> Créer un compte
+                    <i class="fa-solid fa-user-plus"></i> <?= t('menu.create_account') ?>
                 </a>
                 <a href="<?php echo WEB_ROOT; ?>/compte/index">
-                    <i class="fa-solid fa-users"></i> Afficher les comptes
+                    <i class="fa-solid fa-users"></i> <?= t('menu.list_accounts') ?>
                 </a>
                 <a href="<?php echo WEB_ROOT; ?>/transaction/create" class="active">
-                    <i class="fa-solid fa-arrow-right-arrow-left"></i> Transactions
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i> <?= t('menu.transactions') ?>
                 </a>
             </nav>
         </div>
@@ -53,19 +58,19 @@
 <main class="main">
 
 <div class="page-header">
-            <h1>Gestion des transactions</h1>
-            <p>Ajouter des dépôts/retraits et consulter l'historique</p>
+            <h1><?= t('transaction.title') ?></h1>
+            <p><?= t('transaction.subtitle') ?></p>
         </div>
 
         <div class="tabs">
             <a href="<?php echo WEB_ROOT; ?>/transaction/create">
                 <div class="tab">
-                    Ajouter une transaction
+                    <?= t('transaction.tab_add') ?>
                 </div>
             </a>
             <a href="<?php echo WEB_ROOT; ?>/transaction/index">
                 <div class="tab active">
-                    Lister les transactions
+                    <?= t('transaction.tab_list') ?>
                 </div>
             </a>
         </div>
@@ -75,18 +80,18 @@
             <!-- ÉTAT 1 : AUCUN COMPTE -->
             <div class="empty">
                 <i class="fa-solid fa-list"></i>
-                <h3>Aucun compte disponible</h3>
+                <h3><?= t('transaction.empty_accounts') ?></h3>
             </div>
 
         <?php else: ?>
 
             <div class="form-group">
                 
-                <label>Rechercher un compte</label>
+                <label><?= t('transaction.search_account') ?></label>
                 <div class="autocomplete-container">
                     <input type="text" 
                         id="compte-search" 
-                        placeholder="Tapez un numéro de compte..." 
+                        placeholder="<?= t('transaction.search_placeholder') ?>" 
                         value="<?= $numeroDeCompte ?? '' ?>"
                         autocomplete="off">
                     

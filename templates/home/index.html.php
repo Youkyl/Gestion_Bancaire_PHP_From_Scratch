@@ -5,10 +5,10 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<?= htmlspecialchars(current_lang()) ?>">
 <head>
     <meta charset="UTF-8">
-    <title>Tableau de bord | Admin Bancaire</title>
+    <title><?= t('home.title') ?> | <?= t('app.admin_title') ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="format-detection" content="telephone=no">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -22,22 +22,27 @@
     <aside class="sidebar">
         <div>
             <div class="sidebar-header">
-                <h2>Admin Bancaire</h2>
-                <p>Espace Administrateur</p>
+                <h2><?= t('app.admin_title') ?></h2>
+                <p><?= t('app.admin_space') ?></p>
+                <div class="lang-switch">
+                    <a href="<?= lang_switch_url('fr') ?>">FR</a>
+                    <span>|</span>
+                    <a href="<?= lang_switch_url('en') ?>">EN</a>
+                </div>
             </div>
 
             <nav class="menu">
                 <a href="<?php echo WEB_ROOT; ?>/home/index" class="active">
-                    <i class="fa-solid fa-chart-line"></i> Tableau de bord
+                    <i class="fa-solid fa-chart-line"></i> <?= t('menu.dashboard') ?>
                 </a>
                 <a href="<?php echo WEB_ROOT; ?>/compte/create">
-                    <i class="fa-solid fa-user-plus"></i> Créer un compte
+                    <i class="fa-solid fa-user-plus"></i> <?= t('menu.create_account') ?>
                 </a>
                 <a href="<?php echo WEB_ROOT; ?>/compte/index">
-                    <i class="fa-solid fa-users"></i> Afficher les comptes
+                    <i class="fa-solid fa-users"></i> <?= t('menu.list_accounts') ?>
                 </a>
                 <a href="<?php echo WEB_ROOT; ?>/transaction/create">
-                    <i class="fa-solid fa-arrow-right-arrow-left"></i> Transactions
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i> <?= t('menu.transactions') ?>
                 </a>
             </nav>
         </div>
@@ -52,8 +57,8 @@
     <!-- MAIN -->
     <main class="main">
         <div class="header">
-            <h1>Tableau de bord</h1>
-            <p>Vue d'ensemble de la gestion bancaire</p>
+            <h1><?= t('home.title') ?></h1>
+            <p><?= t('home.subtitle') ?></p>
         </div>
 
         <!-- STATS -->
@@ -63,15 +68,15 @@
             <!-- EMPTY STATE -->
             <div class="empty">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                <h3>Aucun compte disponible</h3>
-                <p>Créez d'abord un compte.</p>
+                <h3><?= t('home.empty_accounts_title') ?></h3>
+                <p><?= t('home.empty_accounts_sub') ?></p>
             </div>
 
             <?php else: ?>
             
                 <div class="stat-card">
                     <div class="stat-header">
-                        <span>Solde total</span>
+                        <span><?= t('home.total_balance') ?></span>
                         <div class="stat-icon icon-blue">
                             <i class="fa-solid fa-coins"></i>
                         </div>
@@ -81,12 +86,12 @@
                 
                 <div class="stat-card">
                     <div class="stat-header">
-                        <span>Total comptes</span>
+                        <span><?= t('home.total_accounts') ?></span>
                         <div class="stat-icon icon-green">
                             <i class="fa-solid fa-wallet"></i>
                         </div>
                     </div>
-                    <h2><?php echo count($comptes)?> compte(s) trouvé(s)</h2>
+                    <h2><?= t('home.accounts_found', ['count' => count($comptes)]) ?></h2>
                 </div>
                 
                 <?php if (empty($transac)): ?>
@@ -95,15 +100,15 @@
                 <div class="empty">
                         <div class="stat-card">
                             <div class="stat-header">
-                                <span>Transactions</span>
+                                <span><?= t('home.transactions') ?></span>
                                 <div class="stat-icon icon-purple">
                                     <i class="fa-solid fa-right-left"></i>
                                 </div>
                             </div>
                             <p></p>
                             <!--<i class="fa-solid fa-triangle-exclamation"></i>-->
-                            <h5>Aucune transaction disponible</h5>
-                            <p>Créez d'abord une transaction.</p>
+                            <h5><?= t('home.no_transactions') ?></h5>
+                            <p><?= t('home.create_transaction') ?></p>
                             <h2></h2>
                         </div>
                 </div>
@@ -112,7 +117,7 @@
 
                 <div class="stat-card">
                     <div class="stat-header">
-                        <span>Transactions</span>
+                        <span><?= t('home.transactions') ?></span>
                         <div class="stat-icon icon-purple">
                             <i class="fa-solid fa-right-left"></i>
                         </div>
@@ -123,7 +128,7 @@
 
                 <div class="stat-card">
                     <div class="stat-header">
-                        <span>Comptes bloqués</span>
+                        <span><?= t('home.blocked_accounts') ?></span>
                         <div class="stat-icon icon-orange">
                             <i class="fa-solid fa-lock"></i>
                         </div>
@@ -137,29 +142,29 @@
 
         <!-- RÉPARTITION -->
         <section class="section">
-            <h3>Répartition des comptes</h3>
+            <h3><?= t('home.accounts_split') ?></h3>
 
             <div class="accounts">
                 <div class="account-card savings">
                     <div class="account-card-header">
-                        <h4>Comptes Épargne</h4>
+                        <h4><?= t('home.savings_accounts') ?></h4>
                         <div class="account-icon">
                             <i class="fa-solid fa-piggy-bank"></i>
                         </div>
                     </div>
                     <h2><?= $totalEpargne?></h2>
-                    <p><?= $totalEpargne?> bloqués</p>
+                    <p><?= t('home.blocked_count', ['count' => $totalEpargne]) ?></p>
                 </div>
 
                 <div class="account-card checking">
                     <div class="account-card-header">
-                        <h4>Comptes Chèque</h4>
+                        <h4><?= t('home.checking_accounts') ?></h4>
                         <div class="account-icon">
                             <i class="fa-solid fa-credit-card"></i>
                         </div>
                     </div>
                     <h2><?= $totalCheque?></h2>
-                    <p>Frais : 0.8% par opération</p>
+                    <p><?= t('home.checking_fee') ?></p>
                 </div>
             </div>
         </section>  
