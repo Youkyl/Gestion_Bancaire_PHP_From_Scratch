@@ -1,9 +1,12 @@
 # Utiliser l'image PHP officielle avec Apache
 FROM php:8.2-cli
 
-# Installer les extensions PHP nécessaires pour PostgreSQL
+# Installer les extensions PHP nécessaires pour PostgreSQL + outils requis par Composer
 RUN apt-get update && apt-get install -y \
     libpq-dev \
+    git \
+    unzip \
+    zip \
     && docker-php-ext-install pdo pdo_pgsql pgsql \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -15,7 +18,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 
 # Copier les fichiers de dépendances
-COPY composer.json composer.lock* ./
+COPY composer.json composer.lock ./
 
 # Installer les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader --no-interaction

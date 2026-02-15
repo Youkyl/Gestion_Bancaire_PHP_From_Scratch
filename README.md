@@ -94,9 +94,31 @@ ifconfig | grep "inet "                     # Mac/Linux
 
 3. Accédez depuis votre mobile : `http://192.168.x.x:8000`
 
-## 🚀 Déploiement sur Render
+## 🚀 Déploiement en production
 
-Consultez le guide complet : [DEPLOY_RENDER.md](DEPLOY_RENDER.md)
+### Option 1 : Render (Cloud - Facile)
+
+Déploiement cloud simple et rapide avec Docker.
+
+📖 Guide complet : [DEPLOY_RENDER.md](DEPLOY_RENDER.md)
+
+**Avantages** :
+- ✅ Gratuit pour démarrer
+- ✅ Déploiement automatique
+- ✅ HTTPS inclus
+- ✅ Pas de maintenance serveur
+
+### Option 2 : Serveur personnel (VPS/Dédié)
+
+Déploiement sur votre propre serveur avec contrôle total.
+
+📖 Guide complet : [DEPLOY_PERSONAL_SERVER.md](DEPLOY_PERSONAL_SERVER.md)
+
+**Avantages** :
+- ✅ Contrôle total
+- ✅ Performance dédiée
+- ✅ Configuration personnalisée
+- ✅ Apprentissage DevOps
 
 **Résumé rapide** :
 

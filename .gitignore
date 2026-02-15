@@ -6,7 +6,7 @@
 
 # Dépendances Composer
 /vendor/
-composer.lock
+# Note: composer.lock DOIT être versionné pour garantir des versions cohérentes
 
 # Fichiers système
 .DS_Store
