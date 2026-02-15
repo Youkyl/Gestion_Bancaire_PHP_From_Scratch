@@ -2,11 +2,11 @@
 
 namespace App\View;
 
-use App\Entity\Comptes;
-use App\Entity\TypeDeCompte;
-use App\Entity\TypeDeTransaction;
-use App\Service\ComptesService;
-use App\Service\TransactionService;
+use App\entity\Comptes;
+use App\entity\TypeDeCompte;
+use App\entity\TypeDeTransaction;
+use App\service\ComptesService;
+use App\service\TransactionService;
 use Exception;
 
 class Main {

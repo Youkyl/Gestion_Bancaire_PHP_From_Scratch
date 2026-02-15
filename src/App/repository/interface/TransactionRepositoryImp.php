@@ -1,6 +1,6 @@
 <?php
 
-namespace App\repository\Interface;
+namespace App\repository\interface;
 
 use App\entity\Transaction;
 use App\entity\TypeDeTransaction;

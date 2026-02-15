@@ -4,7 +4,7 @@ namespace App\repository;
 use App\core\Database;
 use App\entity\Transaction;
 use App\entity\TypeDeTransaction;
-use App\repository\Interface\TransactionRepositoryImp;
+use App\repository\interface\TransactionRepositoryImp;
 use Exception;
 use PDO;
 
