@@ -86,7 +86,8 @@ class TransactionController extends Controller
 
 
             
-            $this->redirect('controller=transaction&action=create');
+            $this->redirect('transaction/list?numeroDeCompte=' . $numeroDeCompte);
+             //$this->redirect('controller=home&action=index');
         }
 
 
