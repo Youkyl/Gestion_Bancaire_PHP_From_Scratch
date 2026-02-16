@@ -28,14 +28,20 @@ class TransactionRepository implements TransactionRepositoryImp
         return self::$instance;
     }
 
-    public function insertTransaction(Transaction $transaction) : void{
+        public function insertTransaction(Transaction $transaction) : void{
 
-        error_log("🚀 DÉBUT insertTransaction pour compte: " . $transaction->getCompte()->getNumeroDeCompte());
+                error_log("🚀 DÉBUT insertTransaction pour compte: " . $transaction->getCompte()->getNumeroDeCompte());
+
+                // Sécuriser l'état de la connexion au cas où une transaction précédente a échoué
+                if ($this->db->inTransaction()) {
+                        $this->db->rollBack();
+                        error_log("⚠️ Transaction précédente annulée avant nouveau BEGIN");
+                }
         
-          try 
-          {
-            $this->db->beginTransaction();
-            error_log("✅ Transaction SQL BEGIN réussie");
+                    try 
+                    {
+                        $this->db->beginTransaction();
+                        error_log("✅ Transaction SQL BEGIN réussie");
           
         // Étape 1 : INSERT transaction
         $sql = "
@@ -55,6 +61,10 @@ class TransactionRepository implements TransactionRepositoryImp
         error_log("🔍 INSERT transaction - Params: " . json_encode($params));
         
         $stmt->execute($params);
+        if ($stmt->errorCode() !== '00000') {
+            $errorInfo = $stmt->errorInfo();
+            throw new \PDOException($errorInfo[2] ?? 'Erreur SQL inconnue', (int)($errorInfo[1] ?? 0));
+        }
         error_log("✅ INSERT transaction réussi");
 
         // Étape 2 : UPDATE compte
@@ -74,6 +84,10 @@ class TransactionRepository implements TransactionRepositoryImp
         error_log("🔍 UPDATE compte - Params: " . json_encode($updateParams));
         
         $stmt->execute($updateParams);
+        if ($stmt->errorCode() !== '00000') {
+            $errorInfo = $stmt->errorInfo();
+            throw new \PDOException($errorInfo[2] ?? 'Erreur SQL inconnue', (int)($errorInfo[1] ?? 0));
+        }
         error_log("✅ UPDATE compte réussi");
         
         $this->db->commit();
