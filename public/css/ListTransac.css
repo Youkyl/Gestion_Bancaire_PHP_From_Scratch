@@ -170,6 +170,11 @@ tbody tr:hover{background:#f9fafb}
 .amount-plus{color:#16a34a;font-weight:600}
 .amount-minus{color:#dc2626;font-weight:600}
 
+/* Wrapper pour le scroll horizontal du tableau */
+.table-scroll {
+    overflow-x: auto;
+}
+
 /* EMPTY */
 .empty{text-align:center;padding:60px;color:#667085;background:#f9fafb;border-radius:12px;border:2px dashed #d1d5db}
 .empty i{font-size:48px;color:#d0d5dd;margin-bottom:16px;opacity:0.5}
@@ -405,7 +410,7 @@ tbody tr:hover{background:#f9fafb}
     }
     
     /* Wrapper pour le scroll horizontal du tableau */
-    .card > div[style*="overflow-x"] {
+    .card .table-scroll {
         margin: -20px;
         padding: 20px;
         overflow-x: auto;

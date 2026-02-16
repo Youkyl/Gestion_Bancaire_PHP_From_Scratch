@@ -81,7 +81,7 @@
                 <div class="info">
                     <div>
                         <small><?= t('common.account_holder') ?></small><br>
-                        <strong>HOUNKPATIN Youan</strong>
+                        <strong>John Doe</strong>
                     </div>
                     <div>
                         <small><?= t('common.current_balance') ?></small><br>
@@ -100,7 +100,7 @@
                 <?php else: ?>
 
                     <!-- ÉTAT 3 : TABLE -->
-                    <div style="overflow-x: auto;">
+                    <div class="table-scroll">
                         <table>
                             <thead>
                                 <tr>

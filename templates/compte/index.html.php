@@ -76,49 +76,51 @@
             <?php else : ?>
 
                 <!-- TABLE -->
-                <table>
-                    <thead>
-                        <tr>
-                            <th><?= t('compte.index.th_holder') ?></th>
-                            <th><?= t('compte.index.th_number') ?></th>
-                            <th><?= t('compte.index.th_type') ?></th>
-                            <th><?= t('compte.index.th_status') ?></th>
-                            <th><?= t('compte.index.th_balance') ?></th>
-                            <th><?= t('compte.index.th_transactions') ?></th>
-                            <th><?= t('compte.index.th_block_duration') ?></th>
-                            <th><?= t('compte.index.th_action') ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($comptes as $key => $compte): ?>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
                             <tr>
-                                <td>Youan HOUNKPATIN</td>
-                                <td><?php echo $compte->getNumeroDeCompte() ?></td>
-                                <td>
-                                    <span class="badge badge-blue">
-                                        <?php echo $compte->getType()->value ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="badge badge-green"><?= t('compte.index.status_active') ?></span>
-                                </td>
-                                <td><?= number_format($compte->getSolde(),2,',',' ') ?> FCFA</td>
-
-                                <?php if (empty($nbrTransac)) : ?>
-                                    <td><?= t('compte.index.no_transactions') ?></td>
-                                <?php else : ?>
-                                    
-                                    <td><?php echo ($nbrTransac[$compte->getNumeroDeCompte()] ?? 0) ?></td>
-
-                                <?php endif; ?>
-
-                                <td><?= $compte->getDureeDeblocage()  ?? "none"  ?> </td>
-                                <td><a href="<?php echo WEB_ROOT; ?>/transaction/list?numeroDeCompte=<?= $compte->getNumeroDeCompte() ?>" 
-                               class="pagination-btn">  <?= t('compte.index.view_transactions') ?></a></td>
+                                <th><?= t('compte.index.th_holder') ?></th>
+                                <th><?= t('compte.index.th_number') ?></th>
+                                <th><?= t('compte.index.th_type') ?></th>
+                                <th><?= t('compte.index.th_status') ?></th>
+                                <th><?= t('compte.index.th_balance') ?></th>
+                                <th><?= t('compte.index.th_transactions') ?></th>
+                                <th><?= t('compte.index.th_block_duration') ?></th>
+                                <th><?= t('compte.index.th_action') ?></th>
                             </tr>
-                        <?php endforeach ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($comptes as $key => $compte): ?>
+                                <tr>
+                                    <td>John Doe</td>
+                                    <td><?php echo $compte->getNumeroDeCompte() ?></td>
+                                    <td>
+                                        <span class="badge badge-blue">
+                                            <?php echo $compte->getType()->value ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-green"><?= t('compte.index.status_active') ?></span>
+                                    </td>
+                                    <td><?= number_format($compte->getSolde(),2,',',' ') ?> FCFA</td>
+
+                                    <?php if (empty($nbrTransac)) : ?>
+                                        <td><?= t('compte.index.no_transactions') ?></td>
+                                    <?php else : ?>
+                                        
+                                        <td><?php echo ($nbrTransac[$compte->getNumeroDeCompte()] ?? 0) ?></td>
+
+                                    <?php endif; ?>
+
+                                    <td><?= $compte->getDureeDeblocage()  ?? "none"  ?> </td>
+                                    <td><a href="<?php echo WEB_ROOT; ?>/transaction/list?numeroDeCompte=<?= $compte->getNumeroDeCompte() ?>" 
+                                   class="pagination-btn">  <?= t('compte.index.view_transactions') ?></a></td>
+                                </tr>
+                            <?php endforeach ?>
+                        </tbody>
+                    </table>
+                </div>
 
                      <!-- ✅ PAGINATION -->
                 <?php if (isset($nbrPage) && $nbrPage > 1): ?>

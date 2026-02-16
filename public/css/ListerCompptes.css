@@ -232,6 +232,11 @@ tbody tr:hover {
     border: 1px solid #a7f3d0;
 }
 
+/* Wrapper pour le scroll horizontal du tableau */
+.table-scroll {
+    overflow-x: auto;
+}
+
 /* ================= EMPTY STATE ================= */
 .empty {
     text-align: center;
@@ -477,9 +482,11 @@ tbody tr:hover {
     }
     
     /* Scroll horizontal pour le tableau sur mobile */
-    .card {
+    .table-scroll {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        margin: -20px;
+        padding: 20px;
     }
     
     table {

@@ -4,6 +4,7 @@ namespace App\service;
 use App\entity\Transaction;
 use App\entity\TypeDeTransaction;
 use App\repository\TransactionRepository;
+use DateTime;
 
 class TransactionService
 {
@@ -41,11 +42,10 @@ class TransactionService
 
         if ($type == TypeDeTransaction::RETRAIT) {
 
-            if ($compte->isCompteEpargne()){
-
-                print("Les retraits ne sont pas autorisés sur un compte épargne.");
+            if ($this->isBlockedEpargne($compte)){
+                print("Les retraits ne sont pas autorises sur un compte epargne bloque.");
                 return false;
-            } 
+            }
 
             if ($compte->isCompteCheque()){
 
@@ -82,6 +82,34 @@ class TransactionService
         );
 
         $this->transactionRepo->insertTransaction($transaction);
+
+        return true;
+    }
+
+    private function isBlockedEpargne($compte): bool
+    {
+        if (!$compte->isCompteEpargne()) {
+            return false;
+        }
+
+        $duree = $compte->getDureeDeblocage();
+        if ($duree === null || $duree <= 0) {
+            return false;
+        }
+
+        if (method_exists($compte, 'getDateBlocage')) {
+            $start = $compte->getDateBlocage();
+        } elseif (method_exists($compte, 'getDateCreation')) {
+            $start = $compte->getDateCreation();
+        } else {
+            $start = null;
+        }
+
+        if ($start) {
+            $startDate = new DateTime($start);
+            $endDate = (clone $startDate)->modify('+' . (int)$duree . ' months');
+            return new DateTime() < $endDate;
+        }
 
         return true;
     }

@@ -3,7 +3,11 @@ const comptes = <?= json_encode(array_map(function($c) {
 return [
     'numero' => $c->getNumeroDeCompte(),
     'type' => $c->getType()->value,
-    'solde' => $c->getSolde()
+    'solde' => $c->getSolde(),
+    'dureeBlocage' => $c->getDureeDeblocage(),
+    'blocageStart' => method_exists($c, 'getDateBlocage')
+        ? $c->getDateBlocage()
+        : (method_exists($c, 'getDateCreation') ? $c->getDateCreation() : null)
 ];
 }, $comptes)) ?>;
 
@@ -64,6 +68,8 @@ filteredComptes.forEach(compte => {
         // Remplir le champ de recherche et cacher la liste
         searchInput.value = compte.numero;
         autocompleteList.style.display = 'none';
+        selectedAccount = compte;
+        updateWithdrawAvailability(selectedAccount);
     });
     
     autocompleteList.appendChild(item);
@@ -86,6 +92,9 @@ if (e.key === 'Enter') {
 document.addEventListener('click', function(e) {
 if (!e.target.closest('.autocomplete-container')) {
     autocompleteList.style.display = 'none';
+    const exactMatch = comptes.find(c => c.numero.toUpperCase() === searchInput.value.trim().toUpperCase());
+    selectedAccount = exactMatch || null;
+    updateWithdrawAvailability(selectedAccount);
 }
 });
 
@@ -102,16 +111,65 @@ const btnRetrait = document.getElementById("btnRetrait");
 const typeInput = document.getElementById("typeTransaction");
 const submitBtn = document.getElementById("btnSubmit");
 
-btnDepot.onclick = () => {
+let selectedAccount = null;
+
+function setWithdrawEnabled(enabled) {
+    btnRetrait.disabled = !enabled;
+    btnRetrait.classList.toggle("disabled", !enabled);
+
+    if (!enabled && btnRetrait.classList.contains("active")) {
+        activateDepot();
+    }
+}
+
+function isBlockedEpargne(account) {
+    if (!account) {
+        return false;
+    }
+    const normalizedType = (account.type || "").toLowerCase();
+    if (normalizedType !== "epargne") {
+        return false;
+    }
+
+    const duration = Number(account.dureeBlocage || 0);
+    if (!duration || duration <= 0) {
+        return false;
+    }
+
+    if (account.blocageStart) {
+        const startDate = new Date(account.blocageStart);
+        if (!Number.isNaN(startDate.getTime())) {
+            const endDate = new Date(startDate);
+            endDate.setMonth(endDate.getMonth() + duration);
+            return new Date() < endDate;
+        }
+    }
+
+    return true;
+}
+
+function updateWithdrawAvailability(account) {
+    setWithdrawEnabled(!isBlockedEpargne(account));
+}
+
+function activateDepot() {
     btnDepot.classList.add("active");
     btnRetrait.classList.remove("active");
     typeInput.value = "DEPOT";
     submitBtn.className = "btn-submit btn-green";
-};
+}
 
-btnRetrait.onclick = () => {
+function activateRetrait() {
+    if (btnRetrait.disabled) {
+        return;
+    }
     btnRetrait.classList.add("active");
     btnDepot.classList.remove("active");
     typeInput.value = "RETRAIT";
     submitBtn.className = "btn-submit btn-red";
-};
+}
+
+btnDepot.onclick = activateDepot;
+btnRetrait.onclick = activateRetrait;
+
+updateWithdrawAvailability(selectedAccount);

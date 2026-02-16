@@ -269,6 +269,12 @@ background: #fef2f2;
 color: #b91c1c;
 }
 
+.type-btn.disabled {
+opacity: 0.5;
+cursor: not-allowed;
+pointer-events: none;
+}
+
 /* ================= BUTTON ================= */
 .btn-submit {
 width: 100%;

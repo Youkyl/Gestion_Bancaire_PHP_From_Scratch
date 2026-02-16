@@ -38,6 +38,40 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = ''; // Rétablir le scroll
     }
 
+    let isScrollHidden = false;
+
+    function setToggleHidden(hidden) {
+        if (hidden === isScrollHidden) {
+            return;
+        }
+        isScrollHidden = hidden;
+        menuToggle.style.opacity = hidden ? '0' : '1';
+        menuToggle.style.pointerEvents = hidden ? 'none' : 'auto';
+    }
+
+    function onScroll() {
+        if (window.innerWidth > 768) {
+            setToggleHidden(true);
+            return;
+        }
+        if (sidebar.classList.contains('active')) {
+            setToggleHidden(true);
+            return;
+        }
+        setToggleHidden(window.scrollY > 0);
+    }
+
+    let scrollTicking = false;
+    window.addEventListener('scroll', function() {
+        if (!scrollTicking) {
+            scrollTicking = true;
+            window.requestAnimationFrame(function() {
+                onScroll();
+                scrollTicking = false;
+            });
+        }
+    }, { passive: true });
+
     // Toggle du menu au clic sur le bouton
     if (menuToggle && sidebar) {
         menuToggle.addEventListener('click', function(e) {
@@ -72,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (window.innerWidth > 768) {
                     closeMenu();
                 }
+                onScroll();
             }, 250);
         });
 
@@ -82,4 +117,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    onScroll();
 });
