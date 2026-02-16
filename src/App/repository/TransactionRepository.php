@@ -7,6 +7,7 @@ use App\entity\TypeDeTransaction;
 use App\repository\interface\TransactionRepositoryImp;
 use Exception;
 use PDO;
+use PDOException;
 
 class TransactionRepository implements TransactionRepositoryImp
 {
