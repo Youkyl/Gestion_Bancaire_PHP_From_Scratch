@@ -63,12 +63,12 @@ class TransactionRepository implements TransactionRepositoryImp
         ]);
         $this->db->commit();
 
-        echo "Transaction insérée avec succès.";
+        // Transaction insérée avec succès
 
     }   catch (Exception $e) {
-  // Oups, problème ? On annule tout (rollback)
-  $this->db->rollBack();
-  echo "Erreur : " . $e->getMessage();
+            // Oups, problème ? On annule tout (rollback)
+            $this->db->rollBack();
+            throw new Exception("Erreur lors de l'insertion de la transaction : " . $e->getMessage());
     }
 }
 

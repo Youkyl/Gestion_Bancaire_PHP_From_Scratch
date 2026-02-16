@@ -81,9 +81,13 @@ class TransactionService
             frais: $frais,
         );
 
-        $this->transactionRepo->insertTransaction($transaction);
-
-        return true;
+        try {
+            $this->transactionRepo->insertTransaction($transaction);
+            return true;
+        } catch (\Exception $e) {
+            // Erreur lors de l'insertion en base de données
+            return false;
+        }
     }
 
     private function isBlockedEpargne($compte): bool

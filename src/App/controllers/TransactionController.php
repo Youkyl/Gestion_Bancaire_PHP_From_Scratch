@@ -79,19 +79,20 @@ class TransactionController extends Controller
             //dd( $montant, $type, $numeroDeCompte);
 
             
-            $this->transacServ->creatTransac(
+            $success = $this->transacServ->creatTransac(
                 montant:$montant, 
                 type:TypeDeTransaction::fromDatabase($type),
                 numeroDeCompte:$numeroDeCompte);    
 
-
-            
-            $this->redirect('transaction/list?numeroDeCompte=' . $numeroDeCompte);
-             //$this->redirect('controller=home&action=index');
+            // Rediriger seulement si la transaction a réussi
+            if ($success) {
+                $this->redirect('transaction/list?numeroDeCompte=' . $numeroDeCompte);
+            } else {
+                // En cas d'échec, rediriger vers le formulaire
+                $this->redirect('transaction/create');
+            }
         }
 
 
     }
-    
-
 }
