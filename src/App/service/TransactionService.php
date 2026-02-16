@@ -34,6 +34,7 @@ class TransactionService
         $compte = $this->comptesService->searchAccByNum($numeroDeCompte);
 
         if ($compte === null) {
+            error_log("❌ TRANSACTION ÉCHOUÉE : Compte $numeroDeCompte non trouvé");
             return false; // Compte non trouvé
         }
 
@@ -43,6 +44,7 @@ class TransactionService
         if ($type == TypeDeTransaction::RETRAIT) {
 
             if ($this->isBlockedEpargne($compte)){
+                error_log("❌ TRANSACTION ÉCHOUÉE : Retrait bloqué sur compte épargne $numeroDeCompte");
                 // Les retraits ne sont pas autorisés sur un compte épargne bloqué
                 return false;
             }
@@ -51,10 +53,12 @@ class TransactionService
 
                 $frais = $compte->getFraisTransaction($montant);
                 $montantFinal += $frais;
+                error_log("💰 Frais appliqués : $frais € (montant final : $montantFinal €)");
                 // Frais de transaction appliqués
             }
 
             if ($compte->getSolde() < $montantFinal) {
+                error_log("❌ TRANSACTION ÉCHOUÉE : Solde insuffisant. Solde: {$compte->getSolde()} €, Requis: $montantFinal €");
                 // Solde insuffisant pour effectuer cette transaction
                 return false;
             }
@@ -67,6 +71,7 @@ class TransactionService
 
                     $frais = $compte->getFraisTransaction($montant);
                     $montantFinal -= $frais;
+                    error_log("💰 Frais appliqués : $frais € (montant final : $montantFinal €)");
                     // Frais de transaction appliqués
 
                 }
@@ -83,8 +88,10 @@ class TransactionService
 
         try {
             $this->transactionRepo->insertTransaction($transaction);
+            error_log("✅ TRANSACTION RÉUSSIE : $montantFinal € ({$type->name}) sur compte $numeroDeCompte");
             return true;
         } catch (\Exception $e) {
+            error_log("❌ TRANSACTION ÉCHOUÉE : Erreur SQL - " . $e->getMessage());
             // Erreur lors de l'insertion en base de données
             return false;
         }
