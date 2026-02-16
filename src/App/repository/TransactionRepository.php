@@ -28,49 +28,138 @@ class TransactionRepository implements TransactionRepositoryImp
         return self::$instance;
     }
 
-    public function insertTransaction(Transaction $transaction) : void{
-
-          try 
-          {
+    public function insertTransaction(Transaction $transaction): void
+    {
+        try {
             $this->db->beginTransaction();
+            error_log("✅ BEGIN transaction");
+            
+            // 1️⃣ INSERT transaction (SANS ::type_transaction)
+            $sql = "
+                INSERT INTO transaction (numero_compte, type, montant, frais)
+                VALUES (:num, :type, :montant, :frais)
+            ";
+            
+            $stmt = $this->db->prepare($sql);
+            
+            $params = [
+                ':num' => $transaction->getCompte()->getNumeroDeCompte(),
+                ':type' => $transaction->getType()->name,  // 'DEPOT' ou 'RETRAIT'
+                ':montant' => $transaction->getMontant(),
+                ':frais' => $transaction->getFrais()
+            ];
+            
+            error_log("🔍 INSERT params: " . json_encode($params));
+            
+            $result = $stmt->execute($params);
+            
+            if (!$result) {
+                $error = $stmt->errorInfo();
+                error_log("❌ INSERT FAILED: " . json_encode($error));
+                throw new Exception("INSERT échoué: " . ($error[2] ?? 'Unknown'));
+            }
+            
+            error_log("✅ INSERT réussi");
+            
+            // 2️⃣ UPDATE compte (modification RELATIVE, pas absolue)
+            $montantAjustement = $transaction->getType()->name === 'RETRAIT'
+                ? -($transaction->getMontant() + $transaction->getFrais())
+                : $transaction->getMontant();
+            
+            $sql = "
+                UPDATE compte
+                SET solde = solde + :ajustement
+                WHERE numero_compte = :num
+            ";
+            
+            $stmt = $this->db->prepare($sql);
+            
+            $params = [
+                ':ajustement' => $montantAjustement,
+                ':num' => $transaction->getCompte()->getNumeroDeCompte()
+            ];
+            
+            error_log("🔍 UPDATE params: " . json_encode($params));
+            
+            $result = $stmt->execute($params);
+            
+            if (!$result) {
+                $error = $stmt->errorInfo();
+                error_log("❌ UPDATE FAILED: " . json_encode($error));
+                throw new Exception("UPDATE échoué: " . ($error[2] ?? 'Unknown'));
+            }
+            
+            if ($stmt->rowCount() === 0) {
+                throw new Exception("Compte introuvable: " . $transaction->getCompte()->getNumeroDeCompte());
+            }
+            
+            error_log("✅ UPDATE réussi (rows: " . $stmt->rowCount() . ")");
+            
+            $this->db->commit();
+            error_log("✅ COMMIT réussi");
+            
+        } catch (PDOException $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+                error_log("🔄 ROLLBACK effectué");
+            }
+            error_log("❌ PDOException: " . $e->getMessage());
+            error_log("❌ Code: " . $e->getCode());
+            throw new Exception("Erreur lors de l'insertion de la transaction : " . $e->getMessage());
+            
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+                error_log("🔄 ROLLBACK effectué");
+            }
+            error_log("❌ Exception: " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+//     public function insertTransaction(Transaction $transaction) : void{
+
+//           try 
+//           {
+//             $this->db->beginTransaction();
           
 
-        $sql = "
-            INSERT INTO transaction (numero_compte, type, montant, frais)
-            VALUES (:num, :type::type_transaction, :montant, :frais)
-        ";
+//         $sql = "
+//             INSERT INTO transaction (numero_compte, type, montant, frais)
+//             VALUES (:num, :type::type_transaction, :montant, :frais)
+//         ";
 
-        $stmt = $this->db->prepare($sql);
+//         $stmt = $this->db->prepare($sql);
 
-        $stmt->execute([
-            ':num' => $transaction->getCompte()->getNumeroDeCompte(),
-            ':type' => $transaction->getType()->name,
-            ':montant' => $transaction->getMontant(),
-            ':frais' => $transaction->getFrais()
-        ]);
+//         $stmt->execute([
+//             ':num' => $transaction->getCompte()->getNumeroDeCompte(),
+//             ':type' => $transaction->getType()->name,
+//             ':montant' => $transaction->getMontant(),
+//             ':frais' => $transaction->getFrais()
+//         ]);
 
-        $sql = "
-            UPDATE compte
-            SET solde = :solde
-            WHERE numero_compte = :num
-        ";
+//         $sql = "
+//             UPDATE compte
+//             SET solde = :solde
+//             WHERE numero_compte = :num
+//         ";
 
-        $stmt = $this->db->prepare($sql);   
+//         $stmt = $this->db->prepare($sql);   
 
-        $stmt->execute([
-            ':solde' => $transaction->getCompte()->getSolde(),
-            ':num' => $transaction->getCompte()->getNumeroDeCompte()
-        ]);
-        $this->db->commit();
+//         $stmt->execute([
+//             ':solde' => $transaction->getCompte()->getSolde(),
+//             ':num' => $transaction->getCompte()->getNumeroDeCompte()
+//         ]);
+//         $this->db->commit();
 
-        // Transaction insérée avec succès
+//         // Transaction insérée avec succès
 
-    }   catch (Exception $e) {
-            // Oups, problème ? On annule tout (rollback)
-            $this->db->rollBack();
-            throw new Exception("Erreur lors de l'insertion de la transaction : " . $e->getMessage());
-    }
-}
+//         }   catch (Exception $e) {
+//                 // Oups, problème ? On annule tout (rollback)
+//                 $this->db->rollBack();
+//                 throw new Exception("Erreur lors de l'insertion de la transaction : " . $e->getMessage());
+//         }
+// }
 
 
     public function selectTransaction(string $numeroDeCompte, $limit = null, $offset = null):array{
