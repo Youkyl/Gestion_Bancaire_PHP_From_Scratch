@@ -29,7 +29,7 @@ class TransactionRepository implements TransactionRepositoryImp
         return self::$instance;
     }
 
-    public function insertTransaction(Transaction $transaction): void
+/*    public function insertTransaction(Transaction $transaction): void
     {
         try {
             $this->db->beginTransaction();
@@ -116,52 +116,51 @@ class TransactionRepository implements TransactionRepositoryImp
             error_log("❌ Exception: " . $e->getMessage());
             throw $e;
         }
-    }
+    } */
 
-//     public function insertTransaction(Transaction $transaction) : void{
+    public function insertTransaction(Transaction $transaction) : void{
 
-//           try 
-//           {
-//             $this->db->beginTransaction();
+          try 
+          {
+            $this->db->beginTransaction();
           
 
-//         $sql = "
-//             INSERT INTO transaction (numero_compte, type, montant, frais)
-//             VALUES (:num, :type::type_transaction, :montant, :frais)
-//         ";
+        $sql = "
+            INSERT INTO transaction (numero_compte, type, montant, frais)
+            VALUES (:num, :type::type_transaction, :montant, :frais)
+        ";
 
-//         $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare($sql);
 
-//         $stmt->execute([
-//             ':num' => $transaction->getCompte()->getNumeroDeCompte(),
-//             ':type' => $transaction->getType()->name,
-//             ':montant' => $transaction->getMontant(),
-//             ':frais' => $transaction->getFrais()
-//         ]);
+        $stmt->execute([
+            ':num' => $transaction->getCompte()->getNumeroDeCompte(),
+            ':type' => $transaction->getType()->name,
+            ':montant' => $transaction->getMontant(),
+            ':frais' => $transaction->getFrais()
+        ]);
 
-//         $sql = "
-//             UPDATE compte
-//             SET solde = :solde
-//             WHERE numero_compte = :num
-//         ";
+        $sql = "
+            UPDATE compte
+            SET solde = :solde
+            WHERE numero_compte = :num
+        ";
 
-//         $stmt = $this->db->prepare($sql);   
+        $stmt = $this->db->prepare($sql);   
 
-//         $stmt->execute([
-//             ':solde' => $transaction->getCompte()->getSolde(),
-//             ':num' => $transaction->getCompte()->getNumeroDeCompte()
-//         ]);
-//         $this->db->commit();
+        $stmt->execute([
+            ':solde' => $transaction->getCompte()->getSolde(),
+            ':num' => $transaction->getCompte()->getNumeroDeCompte()
+        ]);
+        $this->db->commit();
 
-//         // Transaction insérée avec succès
+        // Transaction insérée avec succès
 
-//         }   catch (Exception $e) {
-//                 // Oups, problème ? On annule tout (rollback)
-//                 $this->db->rollBack();
-//                 throw new Exception("Erreur lors de l'insertion de la transaction : " . $e->getMessage());
-//         }
-// }
-
+        }   catch (Exception $e) {
+                // Oups, problème ? On annule tout (rollback)
+                $this->db->rollBack();
+                throw new Exception("Erreur lors de l'insertion de la transaction : " . $e->getMessage());
+        }
+    }
 
     public function selectTransaction(string $numeroDeCompte, $limit = null, $offset = null):array{
 
@@ -240,32 +239,29 @@ class TransactionRepository implements TransactionRepositoryImp
         return $transactions;
     }
 
-    
-public function countAllTransactions() : int {
-    $sql = "SELECT COUNT(*) FROM transaction";
-    return $this->db->query($sql)->fetchColumn();
-}
-
-/**
- * Compte le nombre de transactions pour chaque compte
- * @return array ['CPT00001' => 5, 'CPT00002' => 3, ...]
- */
-public function countTransactionsByAccount(): array
-{
-    $sql = "
-        SELECT numero_compte, COUNT(*) as total
-        FROM transaction
-        GROUP BY numero_compte
-    ";
-    
-    $stmt = $this->db->query($sql);
-    $result = [];
-    
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $result[$row['numero_compte']] = (int)$row['total'];
+    public function countAllTransactions() : int {
+        $sql = "SELECT COUNT(*) FROM transaction";
+        return $this->db->query($sql)->fetchColumn();
     }
-    
-    return $result;
-}
 
+    /**
+     * Compte le nombre de transactions pour chaque compte
+     * @return array ['CPT00001' => 5, 'CPT00002' => 3, ...]
+     */
+    public function countTransactionsByAccount(): array{
+        $sql = "
+            SELECT numero_compte, COUNT(*) as total
+            FROM transaction
+            GROUP BY numero_compte
+        ";
+        
+        $stmt = $this->db->query($sql);
+        $result = [];
+        
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[$row['numero_compte']] = (int)$row['total'];
+        }
+        
+        return $result;
+    }
 }

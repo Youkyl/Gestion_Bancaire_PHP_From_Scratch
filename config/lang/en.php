@@ -34,7 +34,7 @@ return [
     'home.savings_accounts' => 'Savings accounts',
     'home.checking_accounts' => 'Checking accounts',
     'home.blocked_count' => '{count} blocked',
-    'home.checking_fee' => 'Fees: 0.08% per operation',
+    'home.checking_fee' => 'Fees: 0.8% per operation',
 
     'compte.index.title' => 'Accounts list',
     'compte.index.subtitle' => '{count} account(s) registered',
@@ -62,7 +62,7 @@ return [
     'compte.create.select_placeholder' => '-- Select --',
     'compte.create.savings' => 'Savings account',
     'compte.create.checking' => 'Checking account',
-    'compte.create.checking_alert' => 'Operations on checking accounts are billed at 0.08%',
+    'compte.create.checking_alert' => 'Operations on checking accounts are billed at 0.8%',
     'compte.create.block_duration' => 'Block duration (months)',
     'compte.create.block_info' => 'During this period, withdrawals are not allowed',
     'compte.create.initial_balance' => 'Initial balance (FCFA)',

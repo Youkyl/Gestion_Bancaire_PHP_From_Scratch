@@ -78,7 +78,7 @@ class Comptes
     public function getFraisTransaction(float $montant): float
     {
         if ($this->isCompteCheque()) {
-            return $montant * 0.08;
+            return $montant * (0.8 / 100); // 0.8% de frais pour les comptes chèques
         }
         return 0.0;
     }

@@ -34,7 +34,7 @@ return [
     'home.savings_accounts' => 'Comptes Epargne',
     'home.checking_accounts' => 'Comptes Cheque',
     'home.blocked_count' => '{count} bloques',
-    'home.checking_fee' => 'Frais : 0.08% par operation',
+    'home.checking_fee' => 'Frais : 0.8% par operation',
 
     'compte.index.title' => 'Liste des comptes',
     'compte.index.subtitle' => '{count} compte(s) enregistre(s)',
@@ -62,7 +62,7 @@ return [
     'compte.create.select_placeholder' => '-- Selectionner --',
     'compte.create.savings' => 'Compte Epargne',
     'compte.create.checking' => 'Compte Cheque',
-    'compte.create.checking_alert' => 'Les operations sur un compte cheque sont facturees a 0.08%',
+    'compte.create.checking_alert' => 'Les operations sur un compte cheque sont facturees a 0.8%',
     'compte.create.block_duration' => 'Duree de blocage (en mois)',
     'compte.create.block_info' => 'Durant cette periode, les retraits ne seront pas autorises',
     'compte.create.initial_balance' => 'Solde initial (FCFA)',
