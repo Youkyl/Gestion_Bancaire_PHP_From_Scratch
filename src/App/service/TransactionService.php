@@ -37,7 +37,7 @@ class TransactionService
             return false; // Compte non trouvé
         }
 
-        $frais = 0.0;
+        $frais = 0.00;
         $montantFinal = $montant;
 
         if ($type == TypeDeTransaction::RETRAIT) {
@@ -59,7 +59,7 @@ class TransactionService
                 return false;
             }
 
-                  $compte->setSolde($compte->getSolde()-$montantFinal) ;  
+            $compte->setSolde($compte->getSolde()-$montantFinal) ;  
         }
         else {
 
@@ -70,7 +70,8 @@ class TransactionService
                     // Frais de transaction appliqués
 
                 }
-                  $compte->setSolde($compte->getSolde()+$montantFinal) ;                
+                
+                $compte->setSolde($compte->getSolde()+$montantFinal) ;                
 
         }
 
@@ -81,9 +82,13 @@ class TransactionService
             frais: $frais,
         );
 
-        $this->transactionRepo->insertTransaction($transaction);
-
-        return true;
+        try {
+            $this->transactionRepo->insertTransaction($transaction);
+            return true;
+        } catch (\Exception $e) {
+            // Erreur lors de l'insertion en base de données
+            return false;
+        }
     }
 
     private function isBlockedEpargne($compte): bool

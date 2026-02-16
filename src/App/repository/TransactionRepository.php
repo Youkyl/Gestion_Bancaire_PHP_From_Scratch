@@ -64,7 +64,7 @@ class TransactionRepository implements TransactionRepositoryImp
             
             // 2️⃣ UPDATE compte (modification RELATIVE, pas absolue)
             $montantAjustement = $transaction->getType()->name === 'RETRAIT'
-                ? -($transaction->getMontant() + $transaction->getFrais())
+                ? -($transaction->getMontant())
                 : $transaction->getMontant();
             
             $sql = "
