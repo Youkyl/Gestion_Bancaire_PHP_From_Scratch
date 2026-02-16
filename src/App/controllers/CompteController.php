@@ -125,7 +125,7 @@ public function store()
                 );
                  $this->compteService->creatAcc($compte);    
                  
-                 $this->redirect('compte/index.html.php');
+                 $this->redirect('compte/index');
             }
             
         }

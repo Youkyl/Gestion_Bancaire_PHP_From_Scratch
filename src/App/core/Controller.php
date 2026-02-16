@@ -51,9 +51,21 @@ class Controller
            require_once PATH_ROOT . '/templates/base.layout.html.php';
     }
 
+    /**
+     * Redirection intelligente compatible local et déployé (Render)
+     * 
+     * @param string $uri URI relative (ex: 'compte/index', 'transaction/list?numeroDeCompte=123')
+     */
     protected function redirect(string $uri)
     {
-        header("Location: index.php?$uri");
+        // Nettoyage de l'URI (supprime les slashes et extensions superflues)
+        $uri = trim($uri, '/');
+        $uri = str_replace('.html.php', '', $uri);
+        
+        // Construction de l'URL absolue avec WEB_ROOT (compatible proxy Render)
+        $location = WEB_ROOT . '/' . $uri;
+        
+        header("Location: $location");
         exit;
     }
 }
