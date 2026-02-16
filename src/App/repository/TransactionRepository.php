@@ -34,21 +34,32 @@ class TransactionRepository implements TransactionRepositoryImp
           {
             $this->db->beginTransaction();
           
-
+        // Étape 1 : INSERT transaction
         $sql = "
             INSERT INTO transaction (numero_compte, type, montant, frais)
             VALUES (:num, :type::type_transaction, :montant, :frais)
         ";
 
         $stmt = $this->db->prepare($sql);
-
-        $stmt->execute([
+        
+        $params = [
             ':num' => $transaction->getCompte()->getNumeroDeCompte(),
             ':type' => $transaction->getType()->name,
             ':montant' => $transaction->getMontant(),
             ':frais' => $transaction->getFrais()
-        ]);
+        ];
+        
+        error_log("🔍 INSERT transaction - Params: " . json_encode($params));
+        
+        try {
+            $stmt->execute($params);
+            error_log("✅ INSERT transaction réussi");
+        } catch (Exception $insertError) {
+            error_log("❌ ÉCHEC INSERT transaction: " . $insertError->getMessage());
+            throw $insertError;
+        }
 
+        // Étape 2 : UPDATE compte
         $sql = "
             UPDATE compte
             SET solde = :solde
@@ -56,18 +67,31 @@ class TransactionRepository implements TransactionRepositoryImp
         ";
 
         $stmt = $this->db->prepare($sql);   
-
-        $stmt->execute([
+        
+        $updateParams = [
             ':solde' => $transaction->getCompte()->getSolde(),
             ':num' => $transaction->getCompte()->getNumeroDeCompte()
-        ]);
+        ];
+        
+        error_log("🔍 UPDATE compte - Params: " . json_encode($updateParams));
+        
+        try {
+            $stmt->execute($updateParams);
+            error_log("✅ UPDATE compte réussi");
+        } catch (Exception $updateError) {
+            error_log("❌ ÉCHEC UPDATE compte: " . $updateError->getMessage());
+            throw $updateError;
+        }
+        
         $this->db->commit();
-
-        // Transaction insérée avec succès
+        error_log("✅ COMMIT transaction SQL réussi");
 
     }   catch (Exception $e) {
             // Oups, problème ? On annule tout (rollback)
-            $this->db->rollBack();
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+                error_log("🔄 ROLLBACK effectué");
+            }
             throw new Exception("Erreur lors de l'insertion de la transaction : " . $e->getMessage());
     }
 }
