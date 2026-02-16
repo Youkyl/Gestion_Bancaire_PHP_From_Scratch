@@ -30,9 +30,12 @@ class TransactionRepository implements TransactionRepositoryImp
 
     public function insertTransaction(Transaction $transaction) : void{
 
+        error_log("🚀 DÉBUT insertTransaction pour compte: " . $transaction->getCompte()->getNumeroDeCompte());
+        
           try 
           {
             $this->db->beginTransaction();
+            error_log("✅ Transaction SQL BEGIN réussie");
           
         // Étape 1 : INSERT transaction
         $sql = "
@@ -51,13 +54,8 @@ class TransactionRepository implements TransactionRepositoryImp
         
         error_log("🔍 INSERT transaction - Params: " . json_encode($params));
         
-        try {
-            $stmt->execute($params);
-            error_log("✅ INSERT transaction réussi");
-        } catch (Exception $insertError) {
-            error_log("❌ ÉCHEC INSERT transaction: " . $insertError->getMessage());
-            throw $insertError;
-        }
+        $stmt->execute($params);
+        error_log("✅ INSERT transaction réussi");
 
         // Étape 2 : UPDATE compte
         $sql = "
@@ -75,24 +73,30 @@ class TransactionRepository implements TransactionRepositoryImp
         
         error_log("🔍 UPDATE compte - Params: " . json_encode($updateParams));
         
-        try {
-            $stmt->execute($updateParams);
-            error_log("✅ UPDATE compte réussi");
-        } catch (Exception $updateError) {
-            error_log("❌ ÉCHEC UPDATE compte: " . $updateError->getMessage());
-            throw $updateError;
-        }
+        $stmt->execute($updateParams);
+        error_log("✅ UPDATE compte réussi");
         
         $this->db->commit();
         error_log("✅ COMMIT transaction SQL réussi");
 
-    }   catch (Exception $e) {
-            // Oups, problème ? On annule tout (rollback)
+    }   catch (\PDOException $e) {
+            // Exception PDO spécifique
+            error_log("❌ ERREUR PDO: " . $e->getMessage());
+            error_log("❌ Code erreur: " . $e->getCode());
+            error_log("❌ Détails: " . print_r($e->errorInfo, true));
             if ($this->db->inTransaction()) {
                 $this->db->rollBack();
                 error_log("🔄 ROLLBACK effectué");
             }
-            throw new Exception("Erreur lors de l'insertion de la transaction : " . $e->getMessage());
+            throw new \Exception("Erreur SQL : " . $e->getMessage());
+    }   catch (\Exception $e) {
+            // Autres exceptions
+            error_log("❌ ERREUR GÉNÉRALE: " . $e->getMessage());
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+                error_log("🔄 ROLLBACK effectué");
+            }
+            throw new \Exception("Erreur lors de l'insertion de la transaction : " . $e->getMessage());
     }
 }
 
