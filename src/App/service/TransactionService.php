@@ -43,7 +43,7 @@ class TransactionService
         if ($type == TypeDeTransaction::RETRAIT) {
 
             if ($this->isBlockedEpargne($compte)){
-                print("Les retraits ne sont pas autorises sur un compte epargne bloque.");
+                // Les retraits ne sont pas autorisés sur un compte épargne bloqué
                 return false;
             }
 
@@ -51,11 +51,11 @@ class TransactionService
 
                 $frais = $compte->getFraisTransaction($montant);
                 $montantFinal += $frais;
-                print("Frais de transaction appliqués : " . $frais . "\n");
+                // Frais de transaction appliqués
             }
 
             if ($compte->getSolde() < $montantFinal) {
-                print("Solde insuffisant pour effectuer cette transaction.");
+                // Solde insuffisant pour effectuer cette transaction
                 return false;
             }
 
@@ -67,7 +67,7 @@ class TransactionService
 
                     $frais = $compte->getFraisTransaction($montant);
                     $montantFinal -= $frais;
-                    print("Frais de transaction appliqués : " . $frais . "\n");
+                    // Frais de transaction appliqués
 
                 }
                   $compte->setSolde($compte->getSolde()+$montantFinal) ;                
