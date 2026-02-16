@@ -33,9 +33,11 @@ class TransactionRepository implements TransactionRepositoryImp
                 error_log("🚀 DÉBUT insertTransaction pour compte: " . $transaction->getCompte()->getNumeroDeCompte());
 
                 // Sécuriser l'état de la connexion au cas où une transaction précédente a échoué
-                if ($this->db->inTransaction()) {
-                        $this->db->rollBack();
-                        error_log("⚠️ Transaction précédente annulée avant nouveau BEGIN");
+                try {
+                    $this->db->rollBack();
+                    error_log("⚠️ Transaction précédente annulée avant nouveau BEGIN");
+                } catch (\Throwable $e) {
+                    // Pas de transaction active, on continue
                 }
         
                     try 
